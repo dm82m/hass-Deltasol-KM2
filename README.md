@@ -31,15 +31,15 @@ custom_components
 │   ├── __init__.py
 │   ├── const.py
 │   ├── manifest.json
-│   └── sensor.py
+│   ├── sensor.py
 │   └── deltasolapi.py  
 ```
 
 ## Configuration
 
 Configuration variables:
-- `username`: Email address used for logging into WEM Portal
-- `password`: Password used for logging into WEM Portal
+- `username`: Username used for logging into Deltasol KM2
+- `password`: Password used for logging into Deltasol KM2
 - `host`: Hostname or IP address of your Deltasol KM2
 - `scan_interval (Optional)`: Defines update frequency. Optional and in seconds (defaults to 5 min, minimum value is 1
   min)
@@ -50,7 +50,7 @@ Add the following to your `configuration.yaml` file:
 # Example configuration.yaml entry
 sensor:
   - platform: deltasol
-  	host: your_deltasol_hostname_or_ip_address
+    host: your_deltasol_hostname_or_ip_address
     username: your_username
     password: your_password
 ```
