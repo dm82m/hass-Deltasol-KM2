@@ -47,7 +47,8 @@ class DeltasolApi(object):
             value = response[0]["result"]["headersets"][0]["packets"][0]["field_values"][j]["raw_value"]
             if isinstance(value, float):
               value = round(value, 2)
-            data[i["name"].replace(" ", "_").lower()] = (value, icon_mapper[i["unit"]], i["unit"])
+            unit = i["unit"].strip()
+            data[i["name"].replace(" ", "_").lower()] = (value, icon_mapper[unit], unit)
             j += 1
             
         return data

@@ -6,8 +6,8 @@ https://github.com/dm82m/hass-Deltasol-KM2
 Configuration for this platform:
 sensor:
   - platform: deltasol
+    #scan_interval: 300
     host: 192.168.178.15
-    scan_interval: 60
     username: username
     password: password
 """
