@@ -1,0 +1,7 @@
+{
+  "name": "Deltasol KM2",
+  "domains": [
+    "sensor"
+  ],
+  "iot_class": "Cloud Polling"
+}
