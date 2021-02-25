@@ -9,6 +9,5 @@
     "@dm82m"
   ],
   "requirements": [
-    "requests==2.25.1"
   ]
 }
