@@ -8,7 +8,7 @@ Custom component for retrieving sensor information from Deltasol KM2.
 Component uses webservice to get all the sensor data from the Deltasol KM2 and makes it available
 in [Home Assistant](https://home-assistant.io/).
 
-I want to give special credits to @erikkastelec - my plugin is mainly based on the plugin he created! Thanks you for your work man!
+I want to give special credits to @erikkastelec - my plugin is mainly based on the plugin he created! Thank you for your work man!
 
 ## Installation
 
@@ -40,9 +40,9 @@ custom_components
 Configuration variables:
 - `username`: Email address used for logging into WEM Portal
 - `password`: Password used for logging into WEM Portal
-- `host`: hostname or IP address of your Deltasol KM2
-- `scan_interval (Optional)`: Defines update frequency. Optional and in seconds (defaults to 30 min, minimum value is 15
-  min).
+- `host`: Hostname or IP address of your Deltasol KM2
+- `scan_interval (Optional)`: Defines update frequency. Optional and in seconds (defaults to 5 min, minimum value is 1
+  min)
 
 Add the following to your `configuration.yaml` file:
 

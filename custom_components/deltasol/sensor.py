@@ -34,7 +34,7 @@ from .deltasolapi import DeltasolApi
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Optional(CONF_NAME, default=DEFAULT_NAME): config_validation.string,
-        vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(minutes=1)): config_validation.time_period,
+        vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(minutes=5)): config_validation.time_period,
         vol.Required(CONF_HOST): config_validation.string,
         vol.Required(CONF_USERNAME): config_validation.string,
         vol.Required(CONF_PASSWORD): config_validation.string,
@@ -59,7 +59,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         name="deltasol_km2_sensor",
         update_method=async_update_data,
         # Polling interval. Will only be polled if there are subscribers.
-        update_interval=max(config.get(CONF_SCAN_INTERVAL), timedelta(minutes=15)),
+        update_interval=max(config.get(CONF_SCAN_INTERVAL), timedelta(minutes=1)),
     )
 
     # Fetch initial data so we have data when entities subscribe
