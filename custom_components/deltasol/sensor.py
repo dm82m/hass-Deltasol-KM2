@@ -23,7 +23,9 @@ from homeassistant.const import (
     CONF_HOST,
     CONF_SCAN_INTERVAL,
     CONF_USERNAME,
-    CONF_PASSWORD
+    CONF_PASSWORD,
+    DEVICE_CLASS_TEMPERATURE,
+    DEVICE_CLASS_POWER_FACTOR
 )
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
@@ -79,10 +81,7 @@ class DeltasolSensor(Entity):
     def __init__(self, coordinator, _name, _icon, _unit):
         """Initialize the sensor."""
         self.coordinator = coordinator
-        # self.type = sensor_type
         self._last_updated = None
-        # self._sensor_prefix = sensor_prefix
-        # self._entity_type = SENSOR_TYPES[self.type][0]
         self._name = _name
         self._icon = _icon
         self._unit = _unit
@@ -115,7 +114,6 @@ class DeltasolSensor(Entity):
     def unique_id(self):
         """Return the unique ID of the binary sensor."""
         return self._name
-        # f"{self._sensor_prefix}_{self._entity_type}"
 
     @property
     def icon(self):
@@ -139,6 +137,16 @@ class DeltasolSensor(Entity):
     def unit_of_measurement(self):
         """Return the unit of measurement of this entity, if any."""
         return self._unit
+
+    @property
+    def device_class(self):
+        """Return the device class of this entity, if any."""
+        if self._unit == '°C':
+            return DEVICE_CLASS_TEMPERATURE
+        elif self._unit == '%':
+            return DEVICE_CLASS_POWER_FACTOR
+        else:
+            return None
 
     @property
     def device_state_attributes(self):

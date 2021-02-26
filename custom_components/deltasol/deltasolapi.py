@@ -39,7 +39,7 @@ class DeltasolApi(object):
 
         icon_mapper = defaultdict(lambda: "mdi:flash")
         icon_mapper['°C'] = "mdi:thermometer"
-        
+
         data = {}
         
         j = 0
