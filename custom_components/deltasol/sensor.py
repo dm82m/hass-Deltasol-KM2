@@ -17,7 +17,7 @@ from datetime import timedelta
 import async_timeout
 import homeassistant.helpers.config_validation as config_validation
 import voluptuous as vol
-from homeassistant.components.sensor import PLATFORM_SCHEMA
+from homeassistant.components.sensor import SensorEntity, PLATFORM_SCHEMA, STATE_CLASS_MEASUREMENT
 from homeassistant.const import (
     CONF_NAME,
     CONF_HOST,
@@ -27,7 +27,6 @@ from homeassistant.const import (
     DEVICE_CLASS_TEMPERATURE,
     DEVICE_CLASS_POWER_FACTOR
 )
-from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .const import DEFAULT_NAME, _LOGGER, DEFAULT_TIMEOUT
@@ -75,7 +74,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     )
 
 
-class DeltasolSensor(Entity):
+class DeltasolSensor(SensorEntity):
     """Representation of a Deltasol Sensor."""
 
     def __init__(self, coordinator, _name, _icon, _unit):
@@ -145,6 +144,14 @@ class DeltasolSensor(Entity):
             return DEVICE_CLASS_TEMPERATURE
         elif self._unit == '%':
             return DEVICE_CLASS_POWER_FACTOR
+        else:
+            return None
+
+    @property
+    def state_class(self):
+        """Return the state class of this entity, if any."""
+        if self._unit == '°C':
+            return STATE_CLASS_MEASUREMENT
         else:
             return None
 
