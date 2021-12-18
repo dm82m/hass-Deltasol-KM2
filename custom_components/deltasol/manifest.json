@@ -4,10 +4,11 @@
   "documentation": "https://github.com/dm82m/hass-deltasol-KM2",
   "issue_tracker": "https://github.com/dm82m/hass-deltasol-KM2/issues",
   "dependencies": [],
-  "version": "0.0.2",
+  "version": "0.0.3",
   "codeowners": [
     "@dm82m"
   ],
   "requirements": [
-  ]
+  ],
+  "iot_class": "cloud_polling"
 }

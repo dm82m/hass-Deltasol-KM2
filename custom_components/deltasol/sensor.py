@@ -156,7 +156,7 @@ class DeltasolSensor(SensorEntity):
             return None
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes of this device."""
         attr = {}
         if self._last_updated is not None:
