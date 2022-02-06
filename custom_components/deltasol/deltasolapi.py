@@ -1,5 +1,5 @@
 """
-Gets sensor data from Deltasol KM2 using api.
+Gets sensor data from Resol Deltasol KM2/DL2/DL3 using api.
 Author: dm82m
 https://github.com/dm82m/hass-Deltasol-KM2
 """
@@ -44,6 +44,7 @@ class DeltasolApi(object):
         """Use api to get data"""
 
         response = {}
+        
         if self.api_mode == "km2":
             url = "http://" + self.host + "/cgi-bin/resol-webservice"
 
@@ -59,6 +60,7 @@ class DeltasolApi(object):
             payload = "[{'id': '1','jsonrpc': '2.0','method': 'dataGetCurrentData','params': {'authId': '" + authId + "'}}]"
             response = requests.request("POST", url, headers=headers, data = payload).json()
             response = response[0]["result"]
+            
         elif self.api_mode == "dlx":
             url = f'http://{self.host}/dlx/download/live?sessionAuthUsername={self.username}&sessionAuthPassword={self.password}'
             response = requests.request("GET", url).json()

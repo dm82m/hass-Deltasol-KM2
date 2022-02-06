@@ -1,5 +1,5 @@
 """
-Gets sensor data from Deltasol KM2 using api.
+Gets sensor data from Resol Deltasol KM2/DL2/DL3 using api.
 Author: dm82m
 https://github.com/dm82m/hass-Deltasol-KM2
 
@@ -7,6 +7,7 @@ Configuration for this platform:
 sensor:
   - platform: deltasol
     #scan_interval: 300
+    #mode: km2
     host: 192.168.178.15
     username: username
     password: password
@@ -51,7 +52,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     api = DeltasolApi(config.get(CONF_USERNAME), config.get(CONF_PASSWORD), config.get(CONF_HOST), config.get(CONF_MODE))
 
     async def async_update_data():
-        """ fetch data from the Wem Portal website"""
+        """ fetch data from the Resol Deltasol KM2/DL2/DL3"""
         async with async_timeout.timeout(DEFAULT_TIMEOUT):
             data = await hass.async_add_executor_job(api.fetch_data)
             return data
@@ -77,7 +78,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
 
 class DeltasolSensor(SensorEntity):
-    """Representation of a Deltasol Sensor."""
+    """Representation of a Resol Deltasol Sensor."""
 
     def __init__(self, coordinator, _name, _icon, _unit):
         """Initialize the sensor."""

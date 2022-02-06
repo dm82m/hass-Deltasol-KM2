@@ -1,10 +1,10 @@
 {
   "domain": "deltasol",
-  "name": "Deltasol KM2",
+  "name": "Resol Deltasol KM2/DL2/DL3",
   "documentation": "https://github.com/dm82m/hass-deltasol-KM2",
   "issue_tracker": "https://github.com/dm82m/hass-deltasol-KM2/issues",
   "dependencies": [],
-  "version": "0.0.3",
+  "version": "0.1.0",
   "codeowners": [
     "@dm82m"
   ],
