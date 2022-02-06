@@ -4,8 +4,8 @@
 
 # hass-Deltasol-KM2
 
-Custom component for retrieving sensor information from Deltasol KM2.  
-Component uses webservice to get all the sensor data from the Deltasol KM2 and makes it available
+Custom component for retrieving sensor information from Deltasol KM2 or DL2/DL3 (see Configuration).  
+Component uses webservice to get all the sensor data from the Deltasol device and makes it available
 in [Home Assistant](https://home-assistant.io/).
 
 I want to give special credits to @erikkastelec - my plugin is mainly based on the plugin he created! Thank you for your work man!
@@ -41,8 +41,9 @@ Configuration variables:
 - `username`: Username used for logging into Deltasol KM2
 - `password`: Password used for logging into Deltasol KM2
 - `host`: Hostname or IP address of your Deltasol KM2
-- `scan_interval (Optional)`: Defines update frequency. Optional and in seconds (defaults to 5 min, minimum value is 1
-  min)
+- `scan_interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min),
+   minimum value is 60 (1 min).
+- `mode` (Optional): Set api mode ["km2", "dlx"]. Defaults to "km2". To be enable to access a DL2/DL3, set mode to "dlx".
 
 Add the following to your `configuration.yaml` file:
 
