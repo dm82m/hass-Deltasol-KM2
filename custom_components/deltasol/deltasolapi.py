@@ -28,14 +28,17 @@ class DeltasolApi(object):
 
         data = {}
 
-        j = 0
-        for i in response["headers"][0]["fields"]:
-            value = response["headersets"][0]["packets"][0]["field_values"][j]["raw_value"]
-            if isinstance(value, float):
-              value = round(value, 2)
-            unit = i["unit"].strip()
-            data[i["name"].replace(" ", "_").lower()] = (value, icon_mapper[unit], unit)
-            j += 1
+        iHeader = 0
+        for header in response["headers"]:
+            iField = 0
+            for field in response["headers"][iHeader]["fields"]:
+                value = response["headersets"][0]["packets"][iHeader]["field_values"][iField]["raw_value"]
+                if isinstance(value, float):
+                    value = round(value, 2)
+                unit = field["unit"].strip()
+                data[field["name"].replace(" ", "_").lower()] = (value, icon_mapper[unit], unit)
+                iField += 1
+            iHeader +=1
 
         return data
 
