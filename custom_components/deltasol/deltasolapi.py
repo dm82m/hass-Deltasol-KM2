@@ -14,13 +14,13 @@ from .const import (
 class DeltasolApi(object):
     """ Wrapper class for Deltasol KM2"""
 
-    def __init__(self, username, password, host, api_mode="km2"):
+    def __init__(self, username, password, host, api_mode="km2", api_filter=""):
         self.data = None
         self.host = host
         self.username = username
         self.password = password
         self.api_mode = api_mode
-
+        self.api_filter = api_filter
 
     def __parse_data(self, response):
         icon_mapper = defaultdict(lambda: "mdi:flash")
@@ -65,7 +65,11 @@ class DeltasolApi(object):
             response = response[0]["result"]
             
         elif self.api_mode == "dlx":
-            url = f'http://{self.host}/dlx/download/live?sessionAuthUsername={self.username}&sessionAuthPassword={self.password}'
+            #API doco http://danielwippermann.github.io/resol-vbus/#/md/docs/dlx-data-download-api
+            filter = f"filter={self.api_filter}&" if self.api_filter else ""
+            
+            url = f'http://{self.host}/dlx/download/live?{filter}sessionAuthUsername={self.username}&sessionAuthPassword={self.password}'
+            _LOGGER.debug(f"Requesting sensor data {url}")
             response = requests.request("GET", url).json()
 
         return self.__parse_data(response)
