@@ -14,13 +14,13 @@ from .const import (
 class DeltasolApi(object):
     """ Wrapper class for Deltasol KM2"""
 
-    def __init__(self, username, password, host, api_mode="km2", api_filter=""):
+    def __init__(self, username, password, host, api_key, api_mode="km2"):
         self.data = None
         self.host = host
         self.username = username
         self.password = password
         self.api_mode = api_mode
-        self.api_filter = api_filter
+        self.api_key = api_key
 
     def __parse_data(self, response):
         icon_mapper = defaultdict(lambda: "mdi:flash")
@@ -57,19 +57,22 @@ class DeltasolApi(object):
 
             payload = "[{'id': '1','jsonrpc': '2.0','method': 'login','params': {'username': '" + self.username + "','password': '" + self.password + "'}}]"
             response = requests.request("POST", url, headers=headers, data = payload).json()
-            
+            _LOGGER.debug(f"KM2 Login result {response}")
+
             authId = response[0]['result']['authId']
             
             payload = "[{'id': '1','jsonrpc': '2.0','method': 'dataGetCurrentData','params': {'authId': '" + authId + "'}}]"
+            
             response = requests.request("POST", url, headers=headers, data = payload).json()
+            _LOGGER.debug(f"KM2 response {response}")
             response = response[0]["result"]
             
         elif self.api_mode == "dlx":
-            #API doco http://danielwippermann.github.io/resol-vbus/#/md/docs/dlx-data-download-api
-            filter = f"filter={self.api_filter}&" if self.api_filter else ""
+            filter = f"filter={self.api_key}&" if self.api_key else ""
             
             url = f'http://{self.host}/dlx/download/live?{filter}sessionAuthUsername={self.username}&sessionAuthPassword={self.password}'
-            _LOGGER.debug(f"Requesting sensor data {url}")
+            _LOGGER.debug(f"DLX requesting sensor data url {url}")
             response = requests.request("GET", url).json()
+            _LOGGER.debug(f"DLX response {response}")
 
         return self.__parse_data(response)

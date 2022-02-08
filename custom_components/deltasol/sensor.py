@@ -7,8 +7,8 @@ Configuration for this platform:
 sensor:
   - platform: deltasol
     #scan_interval: 300
-    #mode: km2
-    #filter: 00
+    #mode: dlx
+    #api_key: 00
     host: 192.168.178.15
     username: username
     password: password
@@ -27,7 +27,7 @@ from homeassistant.const import (
     CONF_USERNAME,
     CONF_PASSWORD,
     CONF_MODE,
-    CONF_FILTER,
+    CONF_API_KEY,
     DEVICE_CLASS_TEMPERATURE,
     DEVICE_CLASS_POWER_FACTOR
 )
@@ -44,7 +44,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Required(CONF_USERNAME): config_validation.string,
         vol.Required(CONF_PASSWORD): config_validation.string,
         vol.Optional(CONF_MODE, default="km2"): vol.In(["km2", "dlx"]),
-        vol.Optional(CONF_FILTER): config_validation.matches_regex("\d\d"),
+        vol.Optional(CONF_API_KEY): config_validation.matches_regex("\d\d"),
     }
 )
 
@@ -52,7 +52,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Setup the Deltasol KM2 sensors."""
 
-    api = DeltasolApi(config.get(CONF_USERNAME), config.get(CONF_PASSWORD), config.get(CONF_HOST), config.get(CONF_MODE), config.get(CONF_FILTER))
+    api = DeltasolApi(config.get(CONF_USERNAME), config.get(CONF_PASSWORD), config.get(CONF_HOST), config.get(CONF_API_KEY), config.get(CONF_MODE))
 
     async def async_update_data():
         """ fetch data from the Resol Deltasol KM2/DL2/DL3"""
