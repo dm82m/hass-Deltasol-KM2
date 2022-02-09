@@ -14,12 +14,11 @@ from .const import (
 class DeltasolApi(object):
     """ Wrapper class for Deltasol KM2"""
 
-    def __init__(self, username, password, host, api_key, api_mode="km2"):
+    def __init__(self, username, password, host, api_key):
         self.data = None
         self.host = host
         self.username = username
         self.password = password
-        self.api_mode = api_mode
         self.api_key = api_key
 
     def __parse_data(self, response):
@@ -30,6 +29,7 @@ class DeltasolApi(object):
 
         iHeader = 0
         for header in response["headers"]:
+            _LOGGER.debug(f"Found header[{iHeader}] now parsing it ...")
             iField = 0
             for field in response["headers"][iHeader]["fields"]:
                 value = response["headersets"][0]["packets"][iHeader]["field_values"][iField]["raw_value"]
@@ -47,9 +47,9 @@ class DeltasolApi(object):
         """Use api to get data"""
 
         response = {}
-        
-        if self.api_mode == "km2":
-            url = "http://" + self.host + "/cgi-bin/resol-webservice"
+
+        try:
+            url = f"http://{self.host}/cgi-bin/resol-webservice"
 
             headers = {
               'Content-Type': 'application/json'
@@ -57,21 +57,25 @@ class DeltasolApi(object):
 
             payload = "[{'id': '1','jsonrpc': '2.0','method': 'login','params': {'username': '" + self.username + "','password': '" + self.password + "'}}]"
             response = requests.request("POST", url, headers=headers, data = payload).json()
-            _LOGGER.debug(f"KM2 Login result {response}")
+
+            _LOGGER.debug("Got valid JSON, assuming that we have a KM2 device ...")
 
             authId = response[0]['result']['authId']
             
             payload = "[{'id': '1','jsonrpc': '2.0','method': 'dataGetCurrentData','params': {'authId': '" + authId + "'}}]"
-            
+
             response = requests.request("POST", url, headers=headers, data = payload).json()
             _LOGGER.debug(f"KM2 response {response}")
             response = response[0]["result"]
+
+        except ValueError:
+            _LOGGER.debug("Did not get a valid JSON, therefore continuing with DLX device ...")
             
-        elif self.api_mode == "dlx":
             filter = f"filter={self.api_key}&" if self.api_key else ""
             
-            url = f'http://{self.host}/dlx/download/live?{filter}sessionAuthUsername={self.username}&sessionAuthPassword={self.password}'
+            url = f"http://{self.host}/dlx/download/live?{filter}sessionAuthUsername={self.username}&sessionAuthPassword={self.password}"
             _LOGGER.debug(f"DLX requesting sensor data url {url}")
+            
             response = requests.request("GET", url).json()
             _LOGGER.debug(f"DLX response {response}")
 
