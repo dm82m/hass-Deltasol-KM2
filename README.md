@@ -4,9 +4,8 @@
 
 # hass-Deltasol-KM2
 
-Custom component for retrieving sensor information from Resol Deltasol KM2 or DL2/DL3.  
-Component uses webservice to get all the sensor data from the Resol Deltasol KM2 or DL2/DL3 device and makes it available
-in [Home Assistant](https://home-assistant.io/).
+Custom component for retrieving sensor information from Resol Deltasol KM2 or DL2/DL3. This component automatically determines if you are using KM2 or DL2/DL3 device.
+Component uses webservice to get all the sensor data from the Resol Deltasol KM2 or DL2/DL3 device and makes it available in [Home Assistant](https://home-assistant.io/).
 
 ## Credits
 
@@ -47,8 +46,7 @@ Configuration variables:
 - `host`: Hostname or IP address of your Resol Deltasol KM2 or DL2/DL3
 - `scan_interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min),
    minimum value is 60 (1 min).
-- `mode` (Optional): Set api mode ["km2", "dlx"]. Defaults to "km2". To be able to access a DL2/DL3, set mode to "dlx".
-- `api_key` (Optional):  Only applicable if mode is set to dlx. Applies the filter defined on the DL2/DL3. Use the id of the defined filter here.
+- `api_key` (Optional):  Only applicable if you are using DL2/DL3 device. Applies the filter defined on the DL2/DL3. Use the id of the DL2/DL3 defined filter here.
 
 Add the following to your `configuration.yaml` file:
 
