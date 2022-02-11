@@ -40,7 +40,7 @@ class DeltasolApi(object):
                 if isinstance(value, float):
                     value = round(value, 2)
                 unit = field["unit"].strip()
-                data[field["name"].replace(" ", "_").lower()] = (value, icon_mapper[unit], unit)
+                data[field["name"].replace(" ", "_").lower()] = (value, icon_mapper[unit], unit, header["id"] + "__" + field["id"], header["description"], header["destination_name"], header["source_name"])
                 iField += 1
             iHeader +=1
 

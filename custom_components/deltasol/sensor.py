@@ -77,14 +77,14 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     sensor_prefix = config.get(CONF_NAME)
 
     async_add_entities(
-        DeltasolSensor(coordinator, _name, values[1], values[2]) for _name, values in coordinator.data.items()
+        DeltasolSensor(coordinator, _name, values[1], values[2], values[3], values[4], values[5], values[6]) for _name, values in coordinator.data.items()
     )
 
 
 class DeltasolSensor(SensorEntity):
     """Representation of a Resol Deltasol Sensor."""
 
-    def __init__(self, coordinator, _name, _icon, _unit):
+    def __init__(self, coordinator, _name, _icon, _unit, _unique_id, _desc, _dest_name, _src_name):
         """Initialize the sensor."""
         self.coordinator = coordinator
         self._last_updated = None
@@ -92,6 +92,10 @@ class DeltasolSensor(SensorEntity):
         self._icon = _icon
         self._unit = _unit
         self._state = self.state
+        self._unique_id = _unique_id
+        self._desc = _desc
+        self._dest_name = _dest_name
+        self._src_name = _src_name
 
     @property
     def should_poll(self):
@@ -119,7 +123,7 @@ class DeltasolSensor(SensorEntity):
     @property
     def unique_id(self):
         """Return the unique ID of the binary sensor."""
-        return self._name
+        return self._unique_id
 
     @property
     def icon(self):
@@ -166,6 +170,9 @@ class DeltasolSensor(SensorEntity):
     def extra_state_attributes(self):
         """Return the state attributes of this device."""
         attr = {}
+        attr["description"] = self._desc
+        attr["destination_name"] = self._dest_name
+        attr["source_name"] = self._src_name
         if self._last_updated is not None:
             attr["Last Updated"] = self._last_updated
         return attr
