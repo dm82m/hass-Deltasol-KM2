@@ -7,7 +7,6 @@ Configuration for this platform:
 sensor:
   - platform: deltasol
     #scan_interval: 300
-    #mode: dlx
     #api_key: 00
     host: 192.168.178.15
     username: username
@@ -45,7 +44,6 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Optional(CONF_API_KEY): config_validation.matches_regex("\d\d"),
     }
 )
-
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Setup the Deltasol KM2 sensors."""
