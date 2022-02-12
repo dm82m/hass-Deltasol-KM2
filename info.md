@@ -46,7 +46,6 @@ Configuration variables:
 - `host`: Hostname or IP address of your Resol Deltasol KM2 or DL2/DL3
 - `scan_interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min),
    minimum value is 60 (1 min).
-- `mode` (Optional): Set api mode ["km2", "dlx"]. Defaults to auto detect.
 - `api_key` (Optional):  Only applicable if you are using DL2/DL3 device. Applies the filter defined on the DL2/DL3. Use the id of the DL2/DL3 defined filter here.
 
 Add the following to your `configuration.yaml` file:

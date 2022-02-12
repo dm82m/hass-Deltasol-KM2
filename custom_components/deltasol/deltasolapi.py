@@ -5,6 +5,7 @@ https://github.com/dm82m/hass-Deltasol-KM2
 """
 import requests
 import datetime
+import re
 from collections import defaultdict
 
 from .const import (
@@ -14,13 +15,13 @@ from .const import (
 class DeltasolApi(object):
     """ Wrapper class for Deltasol KM2"""
 
-    def __init__(self, username, password, host, api_key, api_mode):
+    def __init__(self, username, password, host, api_key):
         self.data = None
         self.host = host
         self.username = username
         self.password = password
         self.api_key = api_key
-        self.api_mode = api_mode
+        self.product= None
 
     def __parse_data(self, response):
         icon_mapper = defaultdict(lambda: "mdi:flash")
@@ -43,39 +44,40 @@ class DeltasolApi(object):
 
         return data
 
+    def detect_product(self):
+        if self.product is not None:
+            return self.product
 
-    def detect_mode(self):
-        if self.api_mode is not None:
-            return self.api_mode
-        
         try:
-            dlxurl = f"http://{self.host}/dlx/"
-            _LOGGER.debug(f"Testing DLX {dlxurl}")
-            response = requests.request("GET", dlxurl)
-            _LOGGER.debug(f"DLX response {response}")
-            _LOGGER.debug(f"Detected DLX")
-            self.api_mode = 'dlx'
-            return self.api_mode
+            url = f"http://{self.host}/cgi-bin/resol-webservice"
+            _LOGGER.debug(f"Detecting resol product {url}")
+            response = requests.request("GET", url)
+            if(response.status_code == 200):
+                _LOGGER.debug(f"response {response.text}")
+                matches = re.search(r'product\s=\s["](.*?)["]', response.text)
+                if matches:
+                    self.product = matches.group(1).lower()
+                else:
+                     self.product = "km2"
+                _LOGGER.debug(f"Detected {self.product}")
+                return self.product
+                
+        except Exception as e:
+            _LOGGER.debug(f"Error detecting resol product - {e}")
 
-        except ValueError:
-            _LOGGER.debug("Unable to detect DLX")
-
-        _LOGGER.debug("Testing KM2")
-        # find way to test for km2
-        _LOGGER.debug(f"Detected KM2")
-        self.api_mode = 'km2'
-        return self.api_mode
+        _LOGGER.warning("Unable to detect resol system")
+        return self.product
 
 
     def fetch_data(self):
         """Use api to get data"""
-        mode = self.detect_mode()
+        product = self.detect_product()
 
         response = {}
 
-        if(mode=='km2'):
+        if(product=='km2'):
             response = self.fetch_data_km2()
-        elif(mode=='dlx'):
+        elif(product=='dl2' or product=='dl3'):
             response = self.fetch_data_dlx()
         else:
             _LOGGER.debug("Invalid mode, unable to retrive data")
