@@ -14,13 +14,13 @@ from .const import (
 class DeltasolApi(object):
     """ Wrapper class for Deltasol KM2"""
 
-    def __init__(self, username, password, host, api_key):
+    def __init__(self, username, password, host, api_key, api_mode):
         self.data = None
         self.host = host
         self.username = username
         self.password = password
         self.api_key = api_key
-        self.api_mode = None
+        self.api_mode = api_mode
 
     def __parse_data(self, response):
         icon_mapper = defaultdict(lambda: "mdi:flash")
