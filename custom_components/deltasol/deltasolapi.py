@@ -49,7 +49,7 @@ class DeltasolApi(object):
             return self.product
 
         try:
-            url = f"http://{self.host}/cgi-bin/resol-webservice"
+            url = f"http://{self.host}/cgi-bin/get_resol_device_information"
             _LOGGER.debug(f"Detecting resol product {url}")
             response = requests.request("GET", url)
             if(response.status_code == 200):
