@@ -6,13 +6,15 @@ https://github.com/dm82m/hass-Deltasol-KM2
 import requests
 import datetime
 import re
-from collections import defaultdict
+from collections import namedtuple
 from homeassistant.exceptions import IntegrationError
 from requests.exceptions import RequestException
 
 from .const import (
     _LOGGER
 )
+
+DeltasolEndpoint = namedtuple('DeltasolEndpoint', 'name, value, unit, description, bus_dest, bus_src')
 
 class DeltasolApi(object):
     """ Wrapper class for Deltasol KM2"""
@@ -26,9 +28,6 @@ class DeltasolApi(object):
         self.product = None
 
     def __parse_data(self, response):
-        icon_mapper = defaultdict(lambda: "mdi:flash")
-        icon_mapper['°C'] = "mdi:thermometer"
-
         data = {}
 
         iHeader = 0
@@ -39,8 +38,14 @@ class DeltasolApi(object):
                 value = response["headersets"][0]["packets"][iHeader]["field_values"][iField]["raw_value"]
                 if isinstance(value, float):
                     value = round(value, 2)
-                unit = field["unit"].strip()
-                data[field["name"].replace(" ", "_").lower()] = (value, icon_mapper[unit], unit, header["id"] + "__" + field["id"], header["description"], header["destination_name"], header["source_name"])
+                unique_id = header["id"] + "__" + field["id"]
+                data[unique_id] = DeltasolEndpoint(
+                    name=field["name"].replace(" ", "_").lower(),
+                    value=value,
+                    unit=field["unit"].strip(),
+                    description=header["description"],
+                    bus_dest=header["destination_name"],
+                    bus_src=header["source_name"])
                 iField += 1
             iHeader +=1
 

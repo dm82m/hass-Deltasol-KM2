@@ -18,6 +18,7 @@ from datetime import timedelta
 import async_timeout
 import homeassistant.helpers.config_validation as config_validation
 import voluptuous as vol
+from collections import defaultdict
 from homeassistant.components.sensor import SensorEntity, PLATFORM_SCHEMA, STATE_CLASS_MEASUREMENT
 from homeassistant.const import (
     CONF_NAME,
@@ -42,7 +43,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Required(CONF_HOST): config_validation.string,
         vol.Required(CONF_USERNAME): config_validation.string,
         vol.Required(CONF_PASSWORD): config_validation.string,
-        vol.Optional(CONF_API_KEY): config_validation.matches_regex("\d\d"),
+        vol.Optional(CONF_API_KEY, default=False): config_validation.matches_regex("\d\d"),
     }
 )
 
@@ -77,25 +78,32 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     sensor_prefix = config.get(CONF_NAME)
 
     async_add_entities(
-        DeltasolSensor(coordinator, _name, values[1], values[2], values[3], values[4], values[5], values[6]) for _name, values in coordinator.data.items()
+        DeltasolSensor(coordinator, unique_id, endpoint) for unique_id, endpoint in coordinator.data.items()
     )
 
 
 class DeltasolSensor(SensorEntity):
     """Representation of a Resol Deltasol Sensor."""
+    icon_mapper = defaultdict(lambda: "mdi:alert-circle", {
+        '°C': 'mdi:thermometer',
+        '%': 'mdi:flash',
+        'l/h': 'mdi:hydro-power',
+        'bar': 'mdi:car-brake-low-pressure',
+        '%RH': 'mdi:water-percent',
+        's': 'mdi:timer' })
 
-    def __init__(self, coordinator, _name, _icon, _unit, _unique_id, _desc, _dest_name, _src_name):
+    def __init__(self, coordinator, unique_id, endpoint):
         """Initialize the sensor."""
         self.coordinator = coordinator
         self._last_updated = None
-        self._name = _name
-        self._icon = _icon
-        self._unit = _unit
+        self._unique_id = unique_id
+        self._name = endpoint.name
+        self._icon = DeltasolSensor.icon_mapper[endpoint.unit]
+        self._unit = endpoint.unit
         self._state = self.state
-        self._unique_id = _unique_id
-        self._desc = _desc
-        self._dest_name = _dest_name
-        self._src_name = _src_name
+        self._desc = endpoint.description
+        self._dest_name = endpoint.bus_dest
+        self._src_name = endpoint.bus_src
 
     @property
     def should_poll(self):
@@ -134,7 +142,7 @@ class DeltasolSensor(SensorEntity):
     def state(self):
         """Return the state of the sensor."""
         try:
-            state = self.coordinator.data[self._name][0]
+            state = self.coordinator.data[self._unique_id].value
             if state:
                 return state
             return 0
