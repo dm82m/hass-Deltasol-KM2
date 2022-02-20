@@ -17,6 +17,7 @@ from datetime import timedelta
 
 import async_timeout
 import homeassistant.helpers.config_validation as config_validation
+import homeassistant.helpers.entity_registry as entity_registry
 import voluptuous as vol
 from collections import defaultdict
 from homeassistant.components.sensor import SensorEntity, PLATFORM_SCHEMA, STATE_CLASS_MEASUREMENT
@@ -33,7 +34,7 @@ from homeassistant.const import (
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.exceptions import IntegrationError
 
-from .const import DEFAULT_NAME, _LOGGER, DEFAULT_TIMEOUT
+from .const import DEFAULT_NAME, _LOGGER, DEFAULT_TIMEOUT, DOMAIN
 from .deltasolapi import DeltasolApi
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
@@ -46,6 +47,22 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Optional(CONF_API_KEY, default=False): config_validation.matches_regex("\d\d"),
     }
 )
+
+async def update_unique_ids(hass, data):
+    _LOGGER.debug("Checking for sensors with old ids in registry.")
+    ent_reg = await entity_registry.async_get_registry(hass)
+
+    for unique_id, endpoint in data.items():
+        name_id = ent_reg.async_get_entity_id("sensor", DOMAIN, endpoint.name)
+        if name_id is not None:
+            _LOGGER.info(f"Found entity with old id ({name_id}). Updating to new unique_id ({unique_id}).")
+            # check if there already is a new one
+            new_entity_id = ent_reg.async_get_entity_id("sensor", DOMAIN, unique_id)
+            if new_entity_id is not None:
+                _LOGGER.info("Found entity with old id and an entity with a new unique_id. Preserving old entity...")
+                ent_reg.async_remove(new_entity_id)
+            ent_reg.async_update_entity(name_id, new_unique_id=unique_id)
+
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Setup the Deltasol KM2 sensors."""
@@ -74,8 +91,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     # Fetch initial data so we have data when entities subscribe
     await coordinator.async_refresh()
 
-    entities = []
-    sensor_prefix = config.get(CONF_NAME)
+    # Find old entity_ids and convert them to the new format
+    await update_unique_ids(hass, coordinator.data)
 
     async_add_entities(
         DeltasolSensor(coordinator, unique_id, endpoint) for unique_id, endpoint in coordinator.data.items()
