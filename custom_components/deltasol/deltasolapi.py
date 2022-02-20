@@ -60,14 +60,14 @@ class DeltasolApi(object):
                     _LOGGER.info(f"Detected Resol Deltasol product: {self.product}")
                 else:
                     _LOGGER.error("Your device was reachable but we could not correctly detect it, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose")
-                    #TODO #12 grateful shutdown
+                    #TODO #14 grateful shutdown
             else:
                 _LOGGER.error("Are you sure you entered the correct address of the Resol Deltasol KM2/DL2/DL3 device? Please re-check and if the issue still persists, please file an issue here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose")
-                #TODO #12 grateful shutdown
+                #TODO #14 grateful shutdown
                 
         except RequestException as e:
             _LOGGER.error(f"Error detecting Resol Deltasol product - {e}, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose")
-            #TODO #12 grateful shutdown
+            #TODO #14 grateful shutdown
             
         return self.product
 
@@ -84,7 +84,7 @@ class DeltasolApi(object):
             response = self.fetch_data_dlx()
         else:
             _LOGGER.error(f"We detected your Resol Deltasol product as {product} and this product is currently not supported. If you want you can file an issue to support this device here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose")
-            #TODO #12 grateful shutdown
+            #TODO #14 grateful shutdown
 
         return self.__parse_data(response)
 
@@ -97,24 +97,29 @@ class DeltasolApi(object):
         url = f"http://{self.host}/cgi-bin/resol-webservice"
         _LOGGER.debug(f"KM2 requesting sensor data url {url}")
                 
-        headers = {
-            'Content-Type': 'application/json'
-        }
-        payload = "[{'id': '1','jsonrpc': '2.0','method': 'login','params': {'username': '" + self.username + "','password': '" + self.password + "'}}]"
-        response = requests.request("POST", url, headers=headers, data = payload).json()
-        #TODO #13 handle wrong credentials and grateful shutdown
-        authId = response[0]['result']['authId']
-        
-        payload = "[{'id': '1','jsonrpc': '2.0','method': 'dataGetCurrentData','params': {'authId': '" + authId + "'}}]"
-        response = requests.request("POST", url, headers=headers, data = payload).json()
-        _LOGGER.debug(f"KM2 response: {response}")
-        response = response[0]["result"]
+        try:
+            headers = {
+                'Content-Type': 'application/json'
+            }
+            
+            payload = "[{'id': '1','jsonrpc': '2.0','method': 'login','params': {'username': '" + self.username + "','password': '" + self.password + "'}}]"
+            response = requests.request("POST", url, headers=headers, data = payload).json()
+            authId = response[0]['result']['authId']
+            
+            payload = "[{'id': '1','jsonrpc': '2.0','method': 'dataGetCurrentData','params': {'authId': '" + authId + "'}}]"
+            response = requests.request("POST", url, headers=headers, data = payload).json()
+            _LOGGER.debug(f"KM2 response: {response}")
+            response = response[0]["result"]
+
+        except KeyError:
+            _LOGGER.error("Please re-check your username and password in your configuration!")
+            #TODO #14 grateful shutdown
         
         return response
 
 
     def fetch_data_dlx(self):
-        _LOGGER.debug("Retriving data from dlx")
+        _LOGGER.debug("Retrieving data from dlx")
         
         response = {}
 
@@ -123,7 +128,13 @@ class DeltasolApi(object):
         url = f"http://{self.host}/dlx/download/live?{filter}sessionAuthUsername={self.username}&sessionAuthPassword={self.password}"
         _LOGGER.debug(f"DLX requesting sensor data url {url.replace(self.password, '***')}")
         
-        response = requests.request("GET", url).json()
-        #TODO #13 handle wrong credentials and grateful shutdown
+        response = requests.request("GET", url)
+
+        if(response.status_code == 200):
+            response = response.json()
+        else:
+            _LOGGER.error("Please re-check your username and password in your configuration!")
+            #TODO #14 grateful shutdown
+            
         _LOGGER.debug(f"DLX response: {response}")
         return response
