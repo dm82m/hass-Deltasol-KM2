@@ -9,9 +9,11 @@ Component uses webservice to get all the sensor data from the Resol Deltasol KM2
 
 ## Credits
 
-@ostat for adding filter support for DLX
-@chiefdeputy for adding DL2/DL3 support
-@erikkastelec my plugin is mainly based on the plugin he created! Thank you for your work man!
+A huge thank you to the following people for your contribution and/or inspiration!
+
+@ostat
+@chiefdeputy
+@erikkastelec
 
 ## Installation
 
