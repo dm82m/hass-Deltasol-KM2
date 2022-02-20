@@ -30,6 +30,7 @@ from homeassistant.const import (
     DEVICE_CLASS_POWER_FACTOR
 )
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.exceptions import IntegrationError
 
 from .const import DEFAULT_NAME, _LOGGER, DEFAULT_TIMEOUT
 from .deltasolapi import DeltasolApi
@@ -53,8 +54,12 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     async def async_update_data():
         """ fetch data from the Resol Deltasol KM2/DL2/DL3"""
         async with async_timeout.timeout(DEFAULT_TIMEOUT):
-            data = await hass.async_add_executor_job(api.fetch_data)
-            return data
+            try:
+                data = await hass.async_add_executor_job(api.fetch_data)
+                return data
+            except IntegrationError as error:
+                _LOGGER.error(f"Stopping Deltasol Resol integration due to previous error: {error}")
+                raise error
 
     coordinator = DataUpdateCoordinator(
         hass,

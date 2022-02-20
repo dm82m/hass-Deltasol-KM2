@@ -7,6 +7,8 @@ import requests
 import datetime
 import re
 from collections import defaultdict
+from homeassistant.exceptions import IntegrationError
+from requests.exceptions import RequestException
 
 from .const import (
     _LOGGER
@@ -59,34 +61,42 @@ class DeltasolApi(object):
                     self.product = matches.group(1).lower()
                     _LOGGER.info(f"Detected Resol Deltasol product: {self.product}")
                 else:
-                    _LOGGER.error("Your device was reachable but we could not correctly detect it, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose")
-                    #TODO #14 grateful shutdown
+                    error = "Your device was reachable but we could not correctly detect it, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
+                    _LOGGER.error(error)
+                    raise IntegrationError(error)
             else:
-                _LOGGER.error("Are you sure you entered the correct address of the Resol Deltasol KM2/DL2/DL3 device? Please re-check and if the issue still persists, please file an issue here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose")
-                #TODO #14 grateful shutdown
+                error = "Are you sure you entered the correct address of the Resol Deltasol KM2/DL2/DL3 device? Please re-check and if the issue still persists, please file an issue here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
+                _LOGGER.error(error)
+                raise IntegrationError(error)
                 
         except RequestException as e:
-            _LOGGER.error(f"Error detecting Resol Deltasol product - {e}, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose")
-            #TODO #14 grateful shutdown
+            error = f"Error detecting Resol Deltasol product - {e}, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
+            _LOGGER.error(error)
+            raise IntegrationError(error)
             
         return self.product
 
 
     def fetch_data(self):
         """Use api to get data"""
-        product = self.detect_product()
 
-        response = {}
+        try:
+            product = self.detect_product()
 
-        if(product == 'km2'):
-            response = self.fetch_data_km2()
-        elif(product == 'dl2' or product == 'dl3'):
-            response = self.fetch_data_dlx()
-        else:
-            _LOGGER.error(f"We detected your Resol Deltasol product as {product} and this product is currently not supported. If you want you can file an issue to support this device here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose")
-            #TODO #14 grateful shutdown
+            response = {}
+            if(product == 'km2'):
+                response = self.fetch_data_km2()
+            elif(product == 'dl2' or product == 'dl3'):
+                response = self.fetch_data_dlx()
+            else:
+                error = f"We detected your Resol Deltasol product as {product} and this product is currently not supported. If you want you can file an issue to support this device here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
+                _LOGGER.error(error)
+                raise IntegrationError(error)
 
-        return self.__parse_data(response)
+            return self.__parse_data(response)
+
+        except IntegrationError as error:
+            raise error
 
 
     def fetch_data_km2(self):
@@ -112,8 +122,9 @@ class DeltasolApi(object):
             response = response[0]["result"]
 
         except KeyError:
-            _LOGGER.error("Please re-check your username and password in your configuration!")
-            #TODO #14 grateful shutdown
+            error = "Please re-check your username and password in your configuration!"
+            _LOGGER.error(error)
+            raise IntegrationError(error)
         
         return response
 
@@ -133,8 +144,9 @@ class DeltasolApi(object):
         if(response.status_code == 200):
             response = response.json()
         else:
-            _LOGGER.error("Please re-check your username and password in your configuration!")
-            #TODO #14 grateful shutdown
+            error = "Please re-check your username and password in your configuration!"
+            _LOGGER.error(error)
+            raise IntegrationError(error)
             
         _LOGGER.debug(f"DLX response: {response}")
         return response
