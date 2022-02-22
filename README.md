@@ -1,6 +1,9 @@
+[![version](https://img.shields.io/github/v/release/dm82m/hass-Deltasol-KM2?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
-[![buy me a coffee](https://img.shields.io/badge/If%20you%20like%20it-Buy%20me%20a%20coffee-yellow.svg?style=for-the-badge)](https://www.buymeacoffee.com/dirkmaucher)
-[![License](https://img.shields.io/github/license/toreamun/amshan-homeassistant?style=for-the-badge)](LICENSE)
+[![buy_me_a_coffee](https://img.shields.io/badge/If%20you%20like%20it-Buy%20me%20a%20coffee-yellow.svg?style=for-the-badge)](https://www.buymeacoffee.com/dirkmaucher)
+[![license](https://img.shields.io/github/license/toreamun/amshan-homeassistant?style=for-the-badge)](LICENSE)
+[![downloads_total](https://img.shields.io/github/downloads/dm82m/hass-Deltasol-KM2/total?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/releases)
+[![downloads_latest](https://img.shields.io/github/downloads/dm82m/hass-Deltasol-KM2/latest/total?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/releases)
 
 # hass-Deltasol-KM2
 

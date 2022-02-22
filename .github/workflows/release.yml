@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release_zip_file:
+    name: Prepare release asset
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      # Pack the deltasol dir as a zip and upload to the release
+      - name: ZIP deltasol Dir
+        run: |
+          cd ${{ github.workspace }}/custom_components/deltasol
+          zip deltasol.zip -r ./
+      - name: Upload zip to release
+        uses: svenstaro/upload-release-action@v1-release
+
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ github.workspace }}/custom_components/deltasol/deltasol.zip
+          asset_name: deltasol.zip
+          tag: ${{ github.ref }}
+          overwrite: true
