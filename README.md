@@ -24,9 +24,7 @@ A huge thank you to the following people for your contribution and/or inspiratio
 
 ### Manual install
 
-Create a directory called `deltasol` in the `<config directory>/custom_components/` directory on your Home Assistant
-instance. Install this component by copying all files in `/custom_components/deltasol/` folder from this repo into the
-new `<config directory>/custom_components/deltasol/` directory you just created.
+Create a directory called `deltasol` in the `<config directory>/custom_components/` directory on your Home Assistant instance. Install this component by copying all files in `/custom_components/deltasol/` folder from this repo into the new `<config directory>/custom_components/deltasol/` directory you just created.
 
 This is how your custom_components directory should look like:
 
@@ -46,8 +44,7 @@ Configuration variables:
 - `username`: Username used for logging in to Resol Deltasol KM2 or DL2/DL3.
 - `password`: Password used for logging in to Resol Deltasol KM2 or DL2/DL3.
 - `host`: Hostname or IP address of your Resol Deltasol KM2 or DL2/DL3
-- `scan_interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min),
-   minimum value is 60 (1 min).
+- `scan_interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 60 (1 min).
 - `api_key` (Optional):  Only applicable if you are using DL2/DL3 device. Applies the filter defined on the DL2/DL3. Use the id of the DL2/DL3 defined filter here.
 
 Add the following to your `configuration.yaml` file:
