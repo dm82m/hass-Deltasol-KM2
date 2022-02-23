@@ -1,9 +1,10 @@
 [![version](https://img.shields.io/github/v/release/dm82m/hass-Deltasol-KM2?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2)
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
-[![buy_me_a_coffee](https://img.shields.io/badge/If%20you%20like%20it-Buy%20me%20a%20coffee-yellow.svg?style=for-the-badge)](https://www.buymeacoffee.com/dirkmaucher)
+[![maintained](https://img.shields.io/maintenance/yes/2022?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2)
 [![license](https://img.shields.io/github/license/toreamun/amshan-homeassistant?style=for-the-badge)](LICENSE)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)<br/>
 [![downloads_total](https://img.shields.io/github/downloads/dm82m/hass-Deltasol-KM2/total?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/releases)
-[![downloads_latest](https://img.shields.io/github/downloads/dm82m/hass-Deltasol-KM2/latest/total?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/releases)
+[![downloads_latest](https://img.shields.io/github/downloads/dm82m/hass-Deltasol-KM2/latest/total?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/releases)<br/>
+[![buy_me_a_coffee](https://img.shields.io/badge/If%20you%20like%20it-Buy%20me%20a%20coffee-yellow.svg?style=for-the-badge)](https://www.buymeacoffee.com/dirkmaucher)
 
 # hass-Deltasol-KM2
 
@@ -14,9 +15,9 @@ Component uses webservice to get all the sensor data from the Resol Deltasol KM2
 
 A huge thank you to the following people for your contribution and/or inspiration!
 
-@ostat
-@chiefdeputy
-@erikkastelec
+@ostat<br/>
+@chiefdeputy<br/>
+@erikkastelec<br/>
 
 ## Installation
 
@@ -62,7 +63,7 @@ sensor:
 ```
 
 ## Troubleshooting
-Please set your logging for the custom_component to debug:
+Please set your logging for the this custom component to debug during initial setup phase. If everything works well, you are safe to remove the debug logging:
 ```yaml
 logger:
   default: warn
