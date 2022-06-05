@@ -50,7 +50,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 async def update_unique_ids(hass, data):
     _LOGGER.debug("Checking for sensors with old ids in registry.")
-    ent_reg = await entity_registry.async_get_registry(hass)
+    ent_reg = entity_registry.async_get(hass)
 
     for unique_id, endpoint in data.items():
         name_id = ent_reg.async_get_entity_id("sensor", DOMAIN, endpoint.name)
