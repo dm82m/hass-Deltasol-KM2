@@ -1,5 +1,5 @@
 """
-Gets sensor data from Resol Deltasol KM2/DL2/DL3 using api.
+Gets sensor data from Resol Deltasol KM2/DL2/DL3, VBus/LAN, VBus/USB using api.
 Author: dm82m
 https://github.com/dm82m/hass-Deltasol-KM2
 """
@@ -17,7 +17,7 @@ from .const import (
 DeltasolEndpoint = namedtuple('DeltasolEndpoint', 'name, value, unit, description, bus_dest, bus_src')
 
 class DeltasolApi(object):
-    """ Wrapper class for Deltasol KM2"""
+    """ Wrapper class for Resol Deltasol KM2/DL2/DL3, VBus/LAN, VBus/USB. """
 
     def __init__(self, username, password, host, api_key):
         self.data = None
@@ -54,7 +54,7 @@ class DeltasolApi(object):
     def detect_product(self):
         if self.product is not None:
             return self.product
-
+            
         try:
             url = f"http://{self.host}/cgi-bin/get_resol_device_information"
             _LOGGER.info(f"Auto detecting Resol Deltasol product from {url}")
@@ -83,7 +83,7 @@ class DeltasolApi(object):
 
 
     def fetch_data(self):
-        """Use api to get data"""
+        """ Use api to get data """
 
         try:
             product = self.detect_product()
@@ -139,10 +139,16 @@ class DeltasolApi(object):
         
         response = {}
 
-        filter = f"filter={self.api_key}&" if self.api_key else ""
+        url = f"http://{self.host}/dlx/download/live"
+        debugMessage = f"DLX requesting sensor data url {url}"
         
-        url = f"http://{self.host}/dlx/download/live?{filter}sessionAuthUsername={self.username}&sessionAuthPassword={self.password}"
-        _LOGGER.debug(f"DLX requesting sensor data url {url.replace(self.password, '***')}")
+        if self.username is not None and self.password is not None:
+            auth = f"?sessionAuthUsername={self.username}&sessionAuthPassword={self.password}"
+            filter = f"&filter={self.api_key}" if self.api_key else ""
+            url = f"{url}{auth}{filter}"
+            debugMessage = f"DLX requesting sensor data url {url.replace(self.password, '***')}"
+            
+        _LOGGER.debug(debugMessage)
         
         response = requests.request("GET", url)
 

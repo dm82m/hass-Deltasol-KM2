@@ -1,10 +1,10 @@
 {
   "domain": "deltasol",
-  "name": "Resol Deltasol KM2/DL2/DL3",
+  "name": "Resol Deltasol KM2/DL2/DL3, VBus/LAN, VBus/USB",
   "documentation": "https://github.com/dm82m/hass-deltasol-KM2",
   "issue_tracker": "https://github.com/dm82m/hass-deltasol-KM2/issues",
   "dependencies": [],
-  "version": "0.2.4",
+  "version": "0.3.0",
   "codeowners": [
     "@dm82m"
   ],
