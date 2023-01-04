@@ -20,16 +20,19 @@ import homeassistant.helpers.config_validation as config_validation
 import homeassistant.helpers.entity_registry as entity_registry
 import voluptuous as vol
 from collections import defaultdict
-from homeassistant.components.sensor import SensorEntity, PLATFORM_SCHEMA, STATE_CLASS_MEASUREMENT
+from homeassistant.components.sensor import (
+    SensorEntity,
+    SensorDeviceClass,
+    SensorStateClass,
+    PLATFORM_SCHEMA
+)
 from homeassistant.const import (
     CONF_NAME,
     CONF_HOST,
     CONF_SCAN_INTERVAL,
     CONF_USERNAME,
     CONF_PASSWORD,
-    CONF_API_KEY,
-    DEVICE_CLASS_TEMPERATURE,
-    DEVICE_CLASS_POWER_FACTOR
+    CONF_API_KEY
 )
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.exceptions import IntegrationError
@@ -177,9 +180,9 @@ class DeltasolSensor(SensorEntity):
     def device_class(self):
         """Return the device class of this entity, if any."""
         if self._unit == '°C':
-            return DEVICE_CLASS_TEMPERATURE
+            return SensorDeviceClass.TEMPERATURE
         elif self._unit == '%':
-            return DEVICE_CLASS_POWER_FACTOR
+            return SensorDeviceClass.POWER_FACTOR
         else:
             return None
 
@@ -187,7 +190,7 @@ class DeltasolSensor(SensorEntity):
     def state_class(self):
         """Return the state class of this entity, if any."""
         if self._unit == '°C':
-            return STATE_CLASS_MEASUREMENT
+            return SensorStateClass.MEASUREMENT
         else:
             return None
 
