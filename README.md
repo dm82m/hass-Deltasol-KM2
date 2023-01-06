@@ -7,7 +7,7 @@
 
 # hass-Deltasol-KM2
 
-Custom component for retrieving sensor information from Resol Deltasol KM2 or DL2/DL3 or VBus/LAN or VBus/USB. This component automatically determines if you are using KM2 or DL2/DL3 device and can also be set up to work with VBus/LAN or VBus/USB.
+Custom component for retrieving sensor information from Resol KM2 or DL2/DL3 or VBus/LAN or VBus/USB. This component automatically determines if you are using KM2 or DL2/DL3 device and can also be set up to work with VBus/LAN or VBus/USB.
 Component uses webservice to get all the sensor data and makes it available in [Home Assistant](https://home-assistant.io/).
 
 ## Installation
@@ -41,9 +41,9 @@ It works out-of-the-box, the only thing that is needed is the configuration desc
 
 #### Configuration variables
 
-- `username`: Username used for logging in to Resol Deltasol KM2 or DL2/DL3.
-- `password`: Password used for logging in to Resol Deltasol KM2 or DL2/DL3.
-- `host`: Hostname or IP address of your Resol Deltasol KM2 or DL2/DL3.
+- `username`: Username used for logging in to Resol KM2 or DL2/DL3.
+- `password`: Password used for logging in to Resol KM2 or DL2/DL3.
+- `host`: Hostname or IP address of your Resol KM2 or DL2/DL3.
 - `scan_interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 60 (1 min).
 - `api_key` (Optional):  Only applicable if you are using DL2/DL3 device. Applies the filter defined on the DL2/DL3. Use the id of the DL2/DL3 defined filter here.
 
@@ -52,7 +52,7 @@ It works out-of-the-box, the only thing that is needed is the configuration desc
 ```yaml
 sensor:
   - platform: deltasol
-    host: your_deltasol_hostname_or_ip_address
+    host: your_resol_hostname_or_ip
     username: your_username
     password: your_password
 ```

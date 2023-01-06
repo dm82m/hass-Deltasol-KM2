@@ -1,5 +1,5 @@
 """
-Gets sensor data from Resol Deltasol KM2/DL2/DL3, VBus/LAN, VBus/USB using api.
+Gets sensor data from Resol KM2, DL2/DL3, VBus/LAN, VBus/USB using api.
 Author: dm82m
 https://github.com/dm82m/hass-Deltasol-KM2
 """
@@ -17,7 +17,7 @@ from .const import (
 DeltasolEndpoint = namedtuple('DeltasolEndpoint', 'name, value, unit, description, bus_dest, bus_src')
 
 class DeltasolApi(object):
-    """ Wrapper class for Resol Deltasol KM2/DL2/DL3, VBus/LAN, VBus/USB. """
+    """ Wrapper class for Resol KM2, DL2/DL3, VBus/LAN, VBus/USB. """
 
     def __init__(self, username, password, host, api_key):
         self.data = None
@@ -57,25 +57,25 @@ class DeltasolApi(object):
             
         try:
             url = f"http://{self.host}/cgi-bin/get_resol_device_information"
-            _LOGGER.info(f"Auto detecting Resol Deltasol product from {url}")
+            _LOGGER.info(f"Auto detecting Resol product from {url}")
             response = requests.request("GET", url)
             if(response.status_code == 200):
                 _LOGGER.debug(f"response: {response.text}")
                 matches = re.search(r'product\s=\s["](.*?)["]', response.text)
                 if matches:
                     self.product = matches.group(1).lower()
-                    _LOGGER.info(f"Detected Resol Deltasol product: {self.product}")
+                    _LOGGER.info(f"Detected Resol product: {self.product}")
                 else:
                     error = "Your device was reachable but we could not correctly detect it, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
                     _LOGGER.error(error)
                     raise IntegrationError(error)
             else:
-                error = "Are you sure you entered the correct address of the Resol Deltasol KM2/DL2/DL3 device? Please re-check and if the issue still persists, please file an issue here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
+                error = "Are you sure you entered the correct address of the Resol KM2/DL2/DL3 device? Please re-check and if the issue still persists, please file an issue here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
                 _LOGGER.error(error)
                 raise IntegrationError(error)
                 
         except RequestException as e:
-            error = f"Error detecting Resol Deltasol product - {e}, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
+            error = f"Error detecting Resol product - {e}, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
             _LOGGER.error(error)
             raise IntegrationError(error)
             
@@ -94,7 +94,7 @@ class DeltasolApi(object):
             elif(product == 'dl2' or product == 'dl3'):
                 response = self.fetch_data_dlx()
             else:
-                error = f"We detected your Resol Deltasol product as {product} and this product is currently not supported. If you want you can file an issue to support this device here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
+                error = f"We detected your Resol product as {product} and this product is currently not supported. If you want you can file an issue to support this device here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
                 _LOGGER.error(error)
                 raise IntegrationError(error)
 

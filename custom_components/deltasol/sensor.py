@@ -1,5 +1,5 @@
 """
-Gets sensor data from Resol Deltasol KM2/DL2/DL3, VBus/LAN, VBus/USB using api.
+Gets sensor data from Resol KM2, DL2/DL3, VBus/LAN, VBus/USB using api.
 Author: dm82m
 https://github.com/dm82m/hass-Deltasol-KM2
 
@@ -68,24 +68,24 @@ async def update_unique_ids(hass, data):
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """ Setup the Resol Deltasol KM2/DL2/DL3, VBus/LAN, VBus/USB sensors. """
+    """ Setup the Resol KM2, DL2/DL3, VBus/LAN, VBus/USB sensors. """
 
     api = DeltasolApi(config.get(CONF_USERNAME), config.get(CONF_PASSWORD), config.get(CONF_HOST), config.get(CONF_API_KEY))
 
     async def async_update_data():
-        """ Fetch data from the Resol Deltasol KM2/DL2/DL3, VBus/LAN, VBus/USB. """
+        """ Fetch data from the Resol KM2, DL2/DL3, VBus/LAN, VBus/USB. """
         async with async_timeout.timeout(DEFAULT_TIMEOUT):
             try:
                 data = await hass.async_add_executor_job(api.fetch_data)
                 return data
             except IntegrationError as error:
-                _LOGGER.error(f"Stopping Deltasol Resol integration due to previous error: {error}")
+                _LOGGER.error(f"Stopping Resol integration due to previous error: {error}")
                 raise error
 
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
-        name="deltasol_km2_sensor",
+        name="deltasol_sensor",
         update_method=async_update_data,
         # Polling interval. Will only be polled if there are subscribers.
         update_interval=max(config.get(CONF_SCAN_INTERVAL), timedelta(minutes=1)),
@@ -103,7 +103,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
 
 class DeltasolSensor(SensorEntity):
-    """ Representation of a Resol Deltasol sensor. """
+    """ Representation of a Resol sensor. """
     icon_mapper = defaultdict(lambda: "mdi:alert-circle", {
         '°C': 'mdi:thermometer',
         '%': 'mdi:flash',
