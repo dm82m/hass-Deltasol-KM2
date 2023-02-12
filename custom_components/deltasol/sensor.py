@@ -110,7 +110,8 @@ class DeltasolSensor(SensorEntity):
         'l/h': 'mdi:hydro-power',
         'bar': 'mdi:car-brake-low-pressure',
         '%RH': 'mdi:water-percent',
-        's': 'mdi:timer' })
+        's': 'mdi:timer',
+        'Wh': 'mdi:solar-power-variant-outline'})
 
     def __init__(self, coordinator, unique_id, endpoint):
         """ Initialize the sensor. """
@@ -183,6 +184,8 @@ class DeltasolSensor(SensorEntity):
             return SensorDeviceClass.TEMPERATURE
         elif self._unit == '%':
             return SensorDeviceClass.POWER_FACTOR
+        elif self._unit == 'Wh':
+            return SensorDeviceClass.ENERGY
         else:
             return None
 
@@ -191,6 +194,8 @@ class DeltasolSensor(SensorEntity):
         """ Return the state class of this entity, if any. """
         if self._unit == '°C':
             return SensorStateClass.MEASUREMENT
+        elif self._unit == 'Wh':
+            return SensorStateClass.TOTAL_INCREASING
         else:
             return None
 
