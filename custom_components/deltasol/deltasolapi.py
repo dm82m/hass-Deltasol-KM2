@@ -38,6 +38,9 @@ class DeltasolApi(object):
                 value = response["headersets"][0]["packets"][iHeader]["field_values"][iField]["raw_value"]
                 if isinstance(value, float):
                     value = round(value, 2)
+                if "date" in field["name"]:
+                    epochStart = datetime.datetime(2001, 1, 1, 0, 0, 0, 0)
+                    value = epochStart + datetime.timedelta(0, value)
                 unique_id = header["id"] + "__" + field["id"]
                 data[unique_id] = DeltasolEndpoint(
                     name=field["name"].replace(" ", "_").lower(),
