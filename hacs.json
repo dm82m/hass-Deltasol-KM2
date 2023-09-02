@@ -1,5 +1,5 @@
 {
-  "name": "Resol KM2, DL2/DL3, VBus/LAN, VBus/USB",
+  "name": "Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB",
   "domains": [
     "sensor"
   ],

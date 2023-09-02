@@ -1,5 +1,5 @@
 """
-Gets sensor data from Resol KM2, DL2/DL3, VBus/LAN, VBus/USB using api.
+Gets sensor data from Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB using api.
 Author: dm82m
 https://github.com/dm82m/hass-Deltasol-KM2
 """
@@ -17,7 +17,7 @@ from .const import (
 DeltasolEndpoint = namedtuple('DeltasolEndpoint', 'name, value, unit, description, bus_dest, bus_src')
 
 class DeltasolApi(object):
-    """ Wrapper class for Resol KM2, DL2/DL3, VBus/LAN, VBus/USB. """
+    """ Wrapper class for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB. """
 
     def __init__(self, username, password, host, api_key):
         self.data = None

@@ -7,7 +7,7 @@
 
 # hass-Deltasol-KM2
 
-Custom component for retrieving sensor information from Resol KM2 or DL2/DL3 or VBus/LAN or VBus/USB. This component automatically determines if you are using KM2 or DL2/DL3 device and can also be set up to work with VBus/LAN or VBus/USB.
+Custom component for retrieving sensor information from Resol KM1/KM2 or DL2/DL3 or VBus/LAN or VBus/USB. This component automatically determines if you are using KM1/KM2 or DL2/DL3 device and can also be set up to work with VBus/LAN or VBus/USB.
 Component uses webservice to get all the sensor data and makes it available in [Home Assistant](https://home-assistant.io/).
 
 ## Installation
@@ -35,6 +35,8 @@ custom_components
 
 ## Configuration
 
+In any case, try to ensure to have the latest firmware running on your Resol device.
+
 ### KM2 and DL2/DL3
 
 It works out-of-the-box, the only thing that is needed is the configuration described next.
@@ -57,7 +59,7 @@ sensor:
     password: your_password
 ```
 
-### VBus/LAN and VBus/USB
+### KM1, VBus/LAN and VBus/USB
 
 There is one prerequisite before it works. You need to run the resol-vbus [json-live-data-server](https://github.com/danielwippermann/resol-vbus/tree/master/examples/json-live-data-server). To do so you have at least two possibilities:
 1. Run the server as an HAOS add-on, continue [here](https://github.com/dm82m/hassio-addons/tree/main/resol-vbus).
