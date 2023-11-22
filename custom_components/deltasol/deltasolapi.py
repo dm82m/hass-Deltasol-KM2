@@ -27,6 +27,9 @@ class DeltasolApi(object):
         self.api_key = api_key
         self.product = None
 
+        # Additional product details
+        self.product_details = None
+
     def __parse_data(self, response):
         data = {}
 
@@ -41,7 +44,10 @@ class DeltasolApi(object):
                 if "date" in field["name"]:
                     epochStart = datetime.datetime(2001, 1, 1, 0, 0, 0, 0)
                     value = epochStart + datetime.timedelta(0, value)
-                unique_id = header["id"] + "__" + field["id"]
+                # Old unique ID does not take into account multiple devices
+                # unique_id = header["id"] + "__" + field["id"]
+                # New unique ID includes device serial number
+                unique_id = self.product_details['serial'] + "__" + header["id"] + "__" + field["id"]
                 data[unique_id] = DeltasolEndpoint(
                     name=field["name"].replace(" ", "_").lower(),
                     value=value,
@@ -49,6 +55,7 @@ class DeltasolApi(object):
                     description=header["description"],
                     bus_dest=header["destination_name"],
                     bus_src=header["source_name"])
+                    product_details = self.product_details, # Add additional product details
                 iField += 1
             iHeader +=1
 
@@ -68,6 +75,18 @@ class DeltasolApi(object):
                 if matches:
                     self.product = matches.group(1).lower()
                     _LOGGER.info(f"Detected Resol product: {self.product}")
+
+                    # Additional product details
+                    product_details = {
+                        'vendor': re.search(r'vendor\s=\s["](.*?)["]', response.text).group(1),
+                        'serial': re.search(r'serial\s=\s["](.*?)["]', response.text).group(1),
+                        'version': re.search(r'version\s=\s["](.*?)["]', response.text).group(1),
+                        'build': re.search(r'build\s=\s["](.*?)["]', response.text).group(1),
+                        'name': re.search(r'name\s=\s["](.*?)["]', response.text).group(1),
+                        'features': re.search(r'features\s=\s["](.*?)["]', response.text).group(1)
+                    }
+                    _LOGGER.debug(f"Product Details: {product_details}")                    
+                    self.product_details = product_details
                 else:
                     error = "Your device was reachable but we could not correctly detect it, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
                     _LOGGER.error(error)
