@@ -14,6 +14,8 @@ sensor:
 """
 
 from datetime import timedelta
+# Required for diagnostics sensors
+from homeassistant.helpers.entity import EntityCategory
 
 import async_timeout
 import homeassistant.helpers.config_validation as config_validation
@@ -37,7 +39,24 @@ from homeassistant.const import (
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.exceptions import IntegrationError
 
-from .const import DEFAULT_NAME, _LOGGER, DEFAULT_TIMEOUT, DOMAIN
+# Import additional product attributes
+from .const import (
+    DEFAULT_NAME, 
+    _LOGGER, 
+    DEFAULT_TIMEOUT, 
+    DOMAIN, 
+    ATTR_PRODUCT_DESCRIPTION,
+    ATTR_DESTINATION_NAME,
+    ATTR_SOURCE_NAME,
+    ATTR_UNIQUE_ID,
+    ATTR_PRODUCT_SERIAL,
+    ATTR_PRODUCT_NAME,
+    ATTR_PRODUCT_VENDOR,
+    ATTR_PRODUCT_BUILD,
+    ATTR_PRODUCT_VERSION,
+    ATTR_PRODUCT_FEATURES,
+    ATTR_LAST_UPDATED
+)
 from .deltasolapi import DeltasolApi
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
@@ -126,6 +145,17 @@ class DeltasolSensor(SensorEntity):
         self._dest_name = endpoint.bus_dest
         self._src_name = endpoint.bus_src
 
+        # Add additional product details
+        self._product_details = endpoint.product_details
+
+        # Set entity category to diagnostic for sensors with no unit
+        if not endpoint.unit:
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+
+        # If diagnostics entity then disable sensor by default
+        if not endpoint.unit:
+            self._attr_entity_registry_enabled_default = False
+
     @property
     def should_poll(self):
         """ No need to poll. Coordinator notifies entity of updates. """
@@ -203,11 +233,21 @@ class DeltasolSensor(SensorEntity):
     def extra_state_attributes(self):
         """ Return the state attributes of this device. """
         attr = {}
-        attr["description"] = self._desc
-        attr["destination_name"] = self._dest_name
-        attr["source_name"] = self._src_name
+
+        # Add additional product details and use attribute constants for translations
+        attr[ATTR_PRODUCT_DESCRIPTION] = self._desc
+        attr[ATTR_DESTINATION_NAME] = self._dest_name
+        attr[ATTR_SOURCE_NAME] = self._src_name        
+        attr[ATTR_UNIQUE_ID] = self._unique_id
+        attr[ATTR_PRODUCT_SERIAL] = self._product_details['serial']
+        attr[ATTR_PRODUCT_NAME] = self._product_details['name']
+        attr[ATTR_PRODUCT_VENDOR] = self._product_details['vendor']
+        attr[ATTR_PRODUCT_BUILD] = self._product_details['build']
+        attr[ATTR_PRODUCT_VERSION] = self._product_details['version']        
+        attr[ATTR_PRODUCT_FEATURES] = self._product_details['features']
+      
         if self._last_updated is not None:
-            attr["Last Updated"] = self._last_updated
+            attr[ATTR_LAST_UPDATED] = self._last_updated
         return attr
 
     async def async_update(self):
