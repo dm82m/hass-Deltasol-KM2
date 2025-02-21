@@ -14,7 +14,6 @@ sensor:
 """
 
 from datetime import timedelta
-# Required for diagnostics sensors
 from homeassistant.helpers.entity import EntityCategory
 
 import async_timeout
@@ -39,7 +38,6 @@ from homeassistant.const import (
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.exceptions import IntegrationError
 
-# Import additional product attributes
 from .const import (
     DEFAULT_NAME, 
     _LOGGER, 
@@ -74,17 +72,13 @@ async def update_unique_ids(hass, data):
     _LOGGER.debug("Checking for sensors with old ids in registry.")
     ent_reg = entity_registry.async_get(hass)
 
-    for unique_id, endpoint in data.items():
-        name_id = ent_reg.async_get_entity_id("sensor", DOMAIN, endpoint.name)
-        if name_id is not None:
-            _LOGGER.info(f"Found entity with old id ({name_id}). Updating to new unique_id ({unique_id}).")
-            # check if there already is a new one
-            new_entity_id = ent_reg.async_get_entity_id("sensor", DOMAIN, unique_id)
-            if new_entity_id is not None:
-                _LOGGER.info("Found entity with old id and an entity with a new unique_id. Preserving old entity...")
-                ent_reg.async_remove(new_entity_id)
-            ent_reg.async_update_entity(name_id, new_unique_id=unique_id)
-
+    for newest_unique_id, endpoint in data.items():
+        parts = newest_unique_id.split('__', 2)
+        current_unique_id = '__'.join(parts[1:]) if len(parts) > 2 else ''
+        current_entity = ent_reg.async_get_entity_id("sensor", DOMAIN, current_unique_id)
+        if current_unique_id is not None and current_unique_id != newest_unique_id:
+            _LOGGER.info(f"Found entity with old unqique id ({current_unique_id}). Updating to new unique_id ({newest_unique_id}).")
+            ent_reg.async_update_entity(current_entity, new_unique_id=newest_unique_id)
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """ Setup the Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB sensors. """
@@ -144,8 +138,6 @@ class DeltasolSensor(SensorEntity):
         self._desc = endpoint.description
         self._dest_name = endpoint.bus_dest
         self._src_name = endpoint.bus_src
-
-        # Add additional product details
         self._product_details = endpoint.product_details
 
         # Set entity category to diagnostic for sensors with no unit
@@ -234,7 +226,6 @@ class DeltasolSensor(SensorEntity):
         """ Return the state attributes of this device. """
         attr = {}
 
-        # Add additional product details and use attribute constants for translations
         attr[ATTR_PRODUCT_DESCRIPTION] = self._desc
         attr[ATTR_DESTINATION_NAME] = self._dest_name
         attr[ATTR_SOURCE_NAME] = self._src_name        

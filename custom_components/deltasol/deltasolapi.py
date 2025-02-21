@@ -14,7 +14,7 @@ from .const import (
     _LOGGER
 )
 
-DeltasolEndpoint = namedtuple('DeltasolEndpoint', 'name, value, unit, description, bus_dest, bus_src')
+DeltasolEndpoint = namedtuple('DeltasolEndpoint', 'name, value, unit, description, bus_dest, bus_src, product_details')
 
 class DeltasolApi(object):
     """ Wrapper class for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB. """
@@ -26,8 +26,6 @@ class DeltasolApi(object):
         self.password = password
         self.api_key = api_key
         self.product = None
-
-        # Additional product details
         self.product_details = None
 
     def __parse_data(self, response):
@@ -44,9 +42,6 @@ class DeltasolApi(object):
                 if "date" in field["name"]:
                     epochStart = datetime.datetime(2001, 1, 1, 0, 0, 0, 0)
                     value = epochStart + datetime.timedelta(0, value)
-                # Old unique ID does not take into account multiple devices
-                # unique_id = header["id"] + "__" + field["id"]
-                # New unique ID includes device serial number
                 unique_id = self.product_details['serial'] + "__" + header["id"] + "__" + field["id"]
                 data[unique_id] = DeltasolEndpoint(
                     name=field["name"].replace(" ", "_").lower(),
@@ -54,8 +49,8 @@ class DeltasolApi(object):
                     unit=field["unit"].strip(),
                     description=header["description"],
                     bus_dest=header["destination_name"],
-                    bus_src=header["source_name"])
-                    product_details = self.product_details, # Add additional product details
+                    bus_src=header["source_name"],
+                    product_details = self.product_details)
                 iField += 1
             iHeader +=1
 
@@ -76,7 +71,6 @@ class DeltasolApi(object):
                     self.product = matches.group(1).lower()
                     _LOGGER.info(f"Detected Resol product: {self.product}")
 
-                    # Additional product details
                     product_details = {
                         'vendor': re.search(r'vendor\s=\s["](.*?)["]', response.text).group(1),
                         'serial': re.search(r'serial\s=\s["](.*?)["]', response.text).group(1),
