@@ -1,5 +1,5 @@
 [![version](https://img.shields.io/github/v/release/dm82m/hass-Deltasol-KM2?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2)
-[![maintained](https://img.shields.io/maintenance/yes/2023?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2)
+[![maintained](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2)
 [![license](https://img.shields.io/github/license/toreamun/amshan-homeassistant?style=for-the-badge)](LICENSE)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)<br/>
 [![downloads_latest](https://img.shields.io/github/downloads/dm82m/hass-Deltasol-KM2/latest/total?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/releases)
