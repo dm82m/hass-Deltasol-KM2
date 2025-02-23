@@ -1,0 +1,44 @@
+{
+  "config": {
+    "title": "Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB: Configuration",
+    "abort": {
+      "already_configured": "Device is already configured",
+      "reconfigure_successful": "Reconfiguration successful"
+    },
+    "error": {
+      "cannot_connect": "Failed to connect",
+      "invalid_auth": "Invalid authentication",
+      "unknown": "Unexpected error"
+    },
+    "step": {
+      "user": {
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "reconfigure": {
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "username": "Username",
+          "password": "Password"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "scan_interval": "Scan Interval (seconds)",
+          "api_key": "API Key"
+        },
+        "description": "Amend your options.",
+        "title": "Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB: Options"
+      }
+    }
+  }
+}

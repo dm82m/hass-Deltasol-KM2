@@ -1,34 +1,84 @@
+"""API Placeholder.
+
+You should create your api seperately and have it hosted on PYPI.  This is included here for the sole purpose
+of making this example code executable.
 """
-Gets sensor data from Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB using api.
-Author: dm82m
-https://github.com/dm82m/hass-Deltasol-KM2
-"""
+
+from dataclasses import dataclass
+from enum import StrEnum
 import requests
 import datetime
+import logging
 import re
+from random import choice, randrange
 from collections import namedtuple
 from homeassistant.exceptions import IntegrationError
 from requests.exceptions import RequestException
 
-from .const import (
-    _LOGGER
-)
+_LOGGER = logging.getLogger(__name__)
 
-DeltasolEndpoint = namedtuple('DeltasolEndpoint', 'name, value, unit, description, bus_dest, bus_src')
 
-class DeltasolApi(object):
-    """ Wrapper class for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB. """
+class DeviceType(StrEnum):
+    """Device types."""
 
-    def __init__(self, username, password, host, api_key):
-        self.data = None
+    TEMP_SENSOR = "temp_sensor"
+    DOOR_SENSOR = "door_sensor"
+    OTHER = "other"
+
+
+@dataclass
+class Device:
+    """API device."""
+
+    device_id: int
+    device_unique_id: str
+    device_type: DeviceType
+    name: str
+    state: int | float | bool | str
+    unit: str
+    description: str
+    bus_dest: str
+    bus_src: str
+
+
+class API:
+    """Class for example API."""
+
+    def __init__(self, host: str, port: int, user: str, pwd: str, api_key: str) -> None:
+        """Initialise."""
         self.host = host
-        self.username = username
-        self.password = password
+        self.port = port
+        self.user = user
+        self.pwd = pwd
         self.api_key = api_key
         self.product = None
+        self.connected: bool = False
+
+    @property
+    def controller_name(self) -> str:
+        """Return the name of the controller."""
+        return self.host.replace(".", "_")
+
+    def connect(self) -> bool:
+        """Connect to api."""
+        try:
+            self.product = self.detect_product()
+            self.connected = True
+            return True
+        except IntegrationError as error:
+            raise APIConnectionError(str(error))
+
+    def disconnect(self) -> bool:
+        """Disconnect from api."""
+        self.connected = False
+        return True
+
+    def get_devices(self) -> list[Device]:
+        """Get devices on api."""
+        return self.fetch_data()
 
     def __parse_data(self, response):
-        data = {}
+        data = []
 
         iHeader = 0
         for header in response["headers"]:
@@ -41,14 +91,20 @@ class DeltasolApi(object):
                 if "date" in field["name"]:
                     epochStart = datetime.datetime(2001, 1, 1, 0, 0, 0, 0)
                     value = epochStart + datetime.timedelta(0, value)
-                unique_id = header["id"] + "__" + field["id"]
-                data[unique_id] = DeltasolEndpoint(
-                    name=field["name"].replace(" ", "_").lower(),
-                    value=value,
-                    unit=field["unit"].strip(),
-                    description=header["description"],
-                    bus_dest=header["destination_name"],
-                    bus_src=header["source_name"])
+                data.append(
+                    Device(
+                        device_id=1,
+                        device_unique_id = header["id"] + "__" + field["id"],
+                        device_type = DeviceType.OTHER,
+                        name=field["name"].replace(" ", "_").lower(),
+                        state=value,
+                        unit=field["unit"].strip(),
+                        description=header["description"],
+                        bus_dest=header["destination_name"],
+                        bus_src=header["source_name"]
+                    )
+                )
+                _LOGGER.info(data)
                 iField += 1
             iHeader +=1
 
@@ -57,9 +113,8 @@ class DeltasolApi(object):
     def detect_product(self):
         if self.product is not None:
             return self.product
-            
         try:
-            url = f"http://{self.host}/cgi-bin/get_resol_device_information"
+            url = f"http://{self.host}:{self.port}/cgi-bin/get_resol_device_information"
             _LOGGER.info(f"Auto detecting Resol product from {url}")
             response = requests.request("GET", url)
             if(response.status_code == 200):
@@ -76,14 +131,11 @@ class DeltasolApi(object):
                 error = "Are you sure you entered the correct address of the Resol KM2/DL2/DL3 device? Please re-check and if the issue still persists, please file an issue here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
                 _LOGGER.error(error)
                 raise IntegrationError(error)
-                
         except RequestException as e:
             error = f"Error detecting Resol product - {e}, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
             _LOGGER.error(error)
             raise IntegrationError(error)
-            
         return self.product
-
 
     def fetch_data(self):
         """ Use api to get data """
@@ -112,7 +164,7 @@ class DeltasolApi(object):
         
         response = {}
         
-        url = f"http://{self.host}/cgi-bin/resol-webservice"
+        url = f"http://{self.host}:{self.port}/cgi-bin/resol-webservice"
         _LOGGER.debug(f"KM2 requesting sensor data url {url}")
                 
         try:
@@ -120,7 +172,7 @@ class DeltasolApi(object):
                 'Content-Type': 'application/json'
             }
             
-            payload = "[{'id': '1','jsonrpc': '2.0','method': 'login','params': {'username': '" + self.username + "','password': '" + self.password + "'}}]"
+            payload = "[{'id': '1','jsonrpc': '2.0','method': 'login','params': {'username': '" + self.user + "','password': '" + self.pwd + "'}}]"
             response = requests.request("POST", url, headers=headers, data = payload).json()
             authId = response[0]['result']['authId']
             
@@ -142,14 +194,14 @@ class DeltasolApi(object):
         
         response = {}
 
-        url = f"http://{self.host}/dlx/download/live"
+        url = f"http://{self.host}:{self.port}/dlx/download/live"
         debugMessage = f"DLX requesting sensor data url {url}"
         
-        if self.username is not None and self.password is not None:
-            auth = f"?sessionAuthUsername={self.username}&sessionAuthPassword={self.password}"
+        if self.user is not None and self.pwd is not None:
+            auth = f"?sessionAuthUsername={self.user}&sessionAuthPassword={self.pwd}"
             filter = f"&filter={self.api_key}" if self.api_key else ""
             url = f"{url}{auth}{filter}"
-            debugMessage = f"DLX requesting sensor data url {url.replace(self.password, '***')}"
+            debugMessage = f"DLX requesting sensor data url {url.replace(self.pwd, '***')}"
             
         _LOGGER.debug(debugMessage)
         
@@ -164,3 +216,10 @@ class DeltasolApi(object):
             
         _LOGGER.debug(f"DLX response: {response}")
         return response
+
+class APIAuthError(Exception):
+    """Exception class for auth error."""
+
+
+class APIConnectionError(Exception):
+    """Exception class for connection error."""
