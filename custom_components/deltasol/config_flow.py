@@ -1,8 +1,7 @@
-"""Config flow for Integration 101 Template integration."""
+"""Config flow for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB component."""
 
 from __future__ import annotations
 
-from datetime import timedelta
 import logging
 from typing import Any
 
@@ -20,11 +19,21 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, IntegrationError
 from homeassistant.helpers import config_validation as cv
 
-from . import PLATFORM_SCHEMA
 from .const import DEFAULT_NAME, DEFAULT_SCAN_INTERVAL, DOMAIN
 from .deltasolapi import DeltasolApi
 
 _LOGGER = logging.getLogger(__name__)
+
+
+CONFIG_DATA_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_HOST): cv.string,
+        vol.Optional(CONF_USERNAME): cv.string,
+        vol.Optional(CONF_PASSWORD): cv.string,
+        vol.Optional(CONF_SCAN_INTERVAL, default=5): int,
+        vol.Optional(CONF_API_KEY): cv.string,
+    }
+)
 
 
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
@@ -84,14 +93,14 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
 
         # Show initial form.
         return self.async_show_form(
-            step_id="user", data_schema=PLATFORM_SCHEMA, errors=errors
+            step_id="user", data_schema=CONFIG_DATA_SCHEMA, errors=errors
         )
 
     async def async_step_reconfigure(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Add reconfigure step to allow to reconfigure a config entry."""
-        # This methid displays a reconfigure option in the integration and is
+        # This method displays a reconfigure option in the integration and is
         # different to options.
         # It can be used to reconfigure any of the data submitted when first installed.
         # This is optional and can be removed if you do not want to allow reconfiguration.
@@ -146,7 +155,7 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
         """
         errors = {}
         user_input = {}
-        _LOGGER.warning("IMPORT DATA: %s", import_data)
+        _LOGGER.warning("Importing old configuration of 'configuration.yaml': %s", import_data)
         try:
             user_input = {
                 CONF_HOST: import_data[CONF_HOST],

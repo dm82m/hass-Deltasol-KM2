@@ -2,17 +2,7 @@
 
 Gets sensor data from Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB using api
 Author: dm82m
-https://github.com/dm82m/hass-Deltasol-KM2
-
-Configuration for this platform:
-sensor:
-  - platform: deltasol
-    #scan_interval: 300
-    #api_key: 00
-    host: 192.168.178.15
-    username: username
-    password: password
-"""
+https://github.com/dm82m/hass-Deltasol-KM2"""
 
 import asyncio
 from dataclasses import dataclass
