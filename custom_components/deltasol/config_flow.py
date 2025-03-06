@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
 import logging
 from typing import Any
 
@@ -20,11 +19,21 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, IntegrationError
 from homeassistant.helpers import config_validation as cv
 
-from . import PLATFORM_SCHEMA
 from .const import DEFAULT_NAME, DEFAULT_SCAN_INTERVAL, DOMAIN
 from .deltasolapi import DeltasolApi
 
 _LOGGER = logging.getLogger(__name__)
+
+
+CONFIG_DATA_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_HOST): cv.string,
+        vol.Optional(CONF_USERNAME): cv.string,
+        vol.Optional(CONF_PASSWORD): cv.string,
+        vol.Optional(CONF_SCAN_INTERVAL, default=5): int,
+        vol.Optional(CONF_API_KEY): cv.string,
+    }
+)
 
 
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
@@ -84,7 +93,7 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
 
         # Show initial form.
         return self.async_show_form(
-            step_id="user", data_schema=PLATFORM_SCHEMA, errors=errors
+            step_id="user", data_schema=CONFIG_DATA_SCHEMA, errors=errors
         )
 
     async def async_step_reconfigure(
