@@ -3,7 +3,6 @@
   "domains": [
     "sensor"
   ],
-  "iot_class": "Cloud Polling",
   "zip_release": true,
   "filename": "deltasol.zip",
   "render_readme": true
