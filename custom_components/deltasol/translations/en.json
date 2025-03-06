@@ -13,6 +13,7 @@
       "user": {
         "data": {
           "host": "Host",
+          "Port": "Port",
           "username": "Username",
           "password": "Password",
           "api_key": "API key",
@@ -22,6 +23,7 @@
       "reconfigure": {
         "data": {
           "host": "Host",
+          "port": "Port",
           "username": "Username",
           "password": "Password",
           "api_key": "API key",
