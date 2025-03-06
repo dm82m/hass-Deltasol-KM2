@@ -4,6 +4,7 @@
   "documentation": "https://github.com/dm82m/hass-deltasol-KM2",
   "issue_tracker": "https://github.com/dm82m/hass-deltasol-KM2/issues",
   "dependencies": [],
+  "config_flow": true,
   "version": "0.3.3",
   "codeowners": [
     "@dm82m"

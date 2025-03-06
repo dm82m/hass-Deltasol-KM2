@@ -1,120 +1,78 @@
-"""
-Gets sensor data from Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB using api.
-Author: dm82m
-https://github.com/dm82m/hass-Deltasol-KM2
+"""Sensor entities."""
 
-Configuration for this platform:
-sensor:
-  - platform: deltasol
-    #scan_interval: 300
-    #api_key: 00
-    host: 192.168.178.15
-    username: username
-    password: password
-"""
-
-from datetime import timedelta
-
-import async_timeout
-import homeassistant.helpers.config_validation as config_validation
-import homeassistant.helpers.entity_registry as entity_registry
-import voluptuous as vol
 from collections import defaultdict
+import logging
+
 from homeassistant.components.sensor import (
-    SensorEntity,
     SensorDeviceClass,
+    SensorEntity,
     SensorStateClass,
-    PLATFORM_SCHEMA
 )
-from homeassistant.const import (
-    CONF_NAME,
-    CONF_HOST,
-    CONF_SCAN_INTERVAL,
-    CONF_USERNAME,
-    CONF_PASSWORD,
-    CONF_API_KEY
-)
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from homeassistant.exceptions import IntegrationError
+from homeassistant.config_entries import SOURCE_IMPORT
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DEFAULT_NAME, _LOGGER, DEFAULT_TIMEOUT, DOMAIN
-from .deltasolapi import DeltasolApi
+from . import DeltasolConfigEntry
+from .const import DOMAIN
 
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
-    {
-        vol.Optional(CONF_NAME, default=DEFAULT_NAME): config_validation.string,
-        vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(minutes=5)): config_validation.time_period,
-        vol.Required(CONF_HOST): config_validation.string,
-        vol.Optional(CONF_USERNAME): config_validation.string,
-        vol.Optional(CONF_PASSWORD): config_validation.string,
-        vol.Optional(CONF_API_KEY): config_validation.matches_regex("\d\d"),
-    }
-)
-
-async def update_unique_ids(hass, data):
-    _LOGGER.debug("Checking for sensors with old ids in registry.")
-    ent_reg = entity_registry.async_get(hass)
-
-    for unique_id, endpoint in data.items():
-        name_id = ent_reg.async_get_entity_id("sensor", DOMAIN, endpoint.name)
-        if name_id is not None:
-            _LOGGER.info(f"Found entity with old id ({name_id}). Updating to new unique_id ({unique_id}).")
-            # check if there already is a new one
-            new_entity_id = ent_reg.async_get_entity_id("sensor", DOMAIN, unique_id)
-            if new_entity_id is not None:
-                _LOGGER.info("Found entity with old id and an entity with a new unique_id. Preserving old entity...")
-                ent_reg.async_remove(new_entity_id)
-            ent_reg.async_update_entity(name_id, new_unique_id=unique_id)
+_LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """ Setup the Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB sensors. """
+async def async_setup_platform(
+    hass: HomeAssistant,
+    config: DeltasolConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+    discovery_info=None,
+):
+    """Platform setup for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB sensors."""
 
-    api = DeltasolApi(config.get(CONF_USERNAME), config.get(CONF_PASSWORD), config.get(CONF_HOST), config.get(CONF_API_KEY))
+    if (
+        not hass.config_entries.async_entries(DOMAIN)
+        and config.get("platform") == DOMAIN
+    ):
+        # No config entry exists and configuration.yaml config exists, trigger the import flow.
+        hass.async_create_task(
+            hass.config_entries.flow.async_init(
+                DOMAIN,
+                context={"source": SOURCE_IMPORT},
+                data=config,
+            )
+        )
 
-    async def async_update_data():
-        """ Fetch data from the Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB. """
-        async with async_timeout.timeout(DEFAULT_TIMEOUT):
-            try:
-                data = await hass.async_add_executor_job(api.fetch_data)
-                return data
-            except IntegrationError as error:
-                _LOGGER.error(f"Stopping Resol integration due to previous error: {error}")
-                raise error
+    return True
 
-    coordinator = DataUpdateCoordinator(
-        hass,
-        _LOGGER,
-        name="deltasol_sensor",
-        update_method=async_update_data,
-        # Polling interval. Will only be polled if there are subscribers.
-        update_interval=max(config.get(CONF_SCAN_INTERVAL), timedelta(minutes=1)),
-    )
 
-    # Fetch initial data so we have data when entities subscribe
-    await coordinator.async_refresh()
-
-    # Find old entity_ids and convert them to the new format
-    await update_unique_ids(hass, coordinator.data)
-
+async def async_setup_entry(
+    hass: HomeAssistant,
+    config: DeltasolConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+):
+    """Set up the Sensors."""
+    coordinator = config.runtime_data.coordinator
     async_add_entities(
-        DeltasolSensor(coordinator, unique_id, endpoint) for unique_id, endpoint in coordinator.data.items()
+        DeltasolSensor(coordinator, unique_id, endpoint)
+        for unique_id, endpoint in coordinator.data.items()
     )
 
 
 class DeltasolSensor(SensorEntity):
-    """ Representation of a Resol sensor. """
-    icon_mapper = defaultdict(lambda: "mdi:alert-circle", {
-        '°C': 'mdi:thermometer',
-        '%': 'mdi:flash',
-        'l/h': 'mdi:hydro-power',
-        'bar': 'mdi:car-brake-low-pressure',
-        '%RH': 'mdi:water-percent',
-        's': 'mdi:timer',
-        'Wh': 'mdi:solar-power-variant-outline'})
+    """Representation of a Resol sensor."""
 
-    def __init__(self, coordinator, unique_id, endpoint):
-        """ Initialize the sensor. """
+    icon_mapper = defaultdict(
+        lambda: "mdi:alert-circle",
+        {
+            "°C": "mdi:thermometer",
+            "%": "mdi:flash",
+            "l/h": "mdi:hydro-power",
+            "bar": "mdi:car-brake-low-pressure",
+            "%RH": "mdi:water-percent",
+            "s": "mdi:timer",
+            "Wh": "mdi:solar-power-variant-outline",
+        },
+    )
+
+    def __init__(self, coordinator, unique_id, endpoint) -> None:
+        """Initialize the sensor."""
         self.coordinator = coordinator
         self._last_updated = None
         self._unique_id = unique_id
@@ -128,80 +86,79 @@ class DeltasolSensor(SensorEntity):
 
     @property
     def should_poll(self):
-        """ No need to poll. Coordinator notifies entity of updates. """
+        """No need to poll. Coordinator notifies entity of updates."""
         return False
 
     @property
     def available(self):
-        """ Return if entity is available. """
+        """Return if entity is available."""
         return self.coordinator.last_update_success
 
     async def async_added_to_hass(self):
-        """ When entity is added to hass. """
+        """When entity is added to hass."""
         self.coordinator.async_add_listener(self.async_write_ha_state)
 
     async def async_will_remove_from_hass(self):
-        """ When entity will be removed from hass. """
+        """When entity will be removed from hass."""
         self.coordinator.async_remove_listener(self.async_write_ha_state)
 
     @property
     def name(self):
-        """ Return the name of the sensor. """
+        """Return the name of the sensor."""
         return self._name
 
     @property
     def unique_id(self):
-        """ Return the unique ID of the binary sensor. """
+        """Return the unique ID of the binary sensor."""
         return self._unique_id
 
     @property
     def icon(self):
-        """ Icon to use in the frontend, if any. """
+        """Icon to use in the frontend, if any."""
         return self._icon
 
     @property
     def state(self):
-        """ Return the state of the sensor. """
+        """Return the state of the sensor."""
         try:
             state = self.coordinator.data[self._unique_id].value
             if state:
                 return state
-            return 0
         except KeyError:
-            _LOGGER.error("can't find %s", self._name)
-            _LOGGER.debug("sensor data %s", self.coordinator.data)
+            _LOGGER.error("Can't find %s", self._name)
+            _LOGGER.debug("Sensor data %s", self.coordinator.data)
             return None
+        else:
+            return 0
 
     @property
     def unit_of_measurement(self):
-        """ Return the unit of measurement of this entity, if any. """
+        """Return the unit of measurement of this entity, if any."""
         return self._unit
 
     @property
     def device_class(self):
-        """ Return the device class of this entity, if any. """
-        if self._unit == '°C':
+        """Return the device class of this entity, if any."""
+        if self._unit == "°C":
             return SensorDeviceClass.TEMPERATURE
-        elif self._unit == '%':
+        if self._unit == "%":
             return SensorDeviceClass.POWER_FACTOR
-        elif self._unit == 'Wh':
+        if self._unit == "Wh":
             return SensorDeviceClass.ENERGY
-        else:
-            return None
+        return None
 
     @property
     def state_class(self):
-        """ Return the state class of this entity, if any. """
-        if self._unit == '°C':
+        """Return the state class of this entity, if any."""
+        if self._unit == "°C":
             return SensorStateClass.MEASUREMENT
-        elif self._unit == 'Wh':
+        if self._unit == "Wh":
             return SensorStateClass.TOTAL_INCREASING
-        else:
-            return None
+        return None
 
     @property
     def extra_state_attributes(self):
-        """ Return the state attributes of this device. """
+        """Return the state attributes of this device."""
         attr = {}
         attr["description"] = self._desc
         attr["destination_name"] = self._dest_name
@@ -211,5 +168,5 @@ class DeltasolSensor(SensorEntity):
         return attr
 
     async def async_update(self):
-        """ Update Entity. Only used by the generic entity update service. """
+        """Update Entity. Only used by the generic entity update service."""
         await self.coordinator.async_request_refresh()

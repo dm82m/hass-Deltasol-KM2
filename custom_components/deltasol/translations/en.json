@@ -1,0 +1,33 @@
+{
+  "config": {
+    "title": "Deltasol Integration",
+    "abort": {
+      "already_configured": "Device is already configured",
+      "reconfigure_successful": "Reconfiguration successful"
+    },
+    "error": {
+      "cannot_connect": "Failed to connect",
+      "unknown": "Unexpected error"
+    },
+    "step": {
+      "user": {
+        "data": {
+          "host": "Host",
+          "username": "Username",
+          "password": "Password",
+          "api_key": "API key",
+          "scan_interval": "Scan interval"
+        }
+      },
+      "reconfigure": {
+        "data": {
+          "host": "Host",
+          "username": "Username",
+          "password": "Password",
+          "api_key": "API key",
+          "scan_interval": "Scan interval"
+        }
+      }
+    }
+  }
+}
