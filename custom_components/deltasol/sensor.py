@@ -11,6 +11,7 @@ from homeassistant.components.sensor import (
 from homeassistant.config_entries import SOURCE_IMPORT
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity import EntityCategory
 
 from . import DeltasolConfigEntry
 from .const import DOMAIN
@@ -83,6 +84,16 @@ class DeltasolSensor(SensorEntity):
         self._desc = endpoint.description
         self._dest_name = endpoint.bus_dest
         self._src_name = endpoint.bus_src
+
+        self._product_details = endpoint.product_details
+
+        # Set entity category to diagnostic for sensors with no unit
+        if not endpoint.unit:
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+
+        # If diagnostics entity then disable sensor by default
+        if not endpoint.unit:
+            self._attr_entity_registry_enabled_default = False
 
     @property
     def should_poll(self):
@@ -157,12 +168,24 @@ class DeltasolSensor(SensorEntity):
         return None
 
     @property
+    def device_info(self):
+        """Return device specific attributes."""
+        # Device unique identifier is the serial
+        return {
+            "identifiers": {(DOMAIN, self._product_details["serial"] + "_" + self._src_name)},
+            "name": self._src_name,
+            "manufacturer": self._product_details["vendor"],
+            "model": self._product_details["name"],
+            "sw_version": self._product_details["version"],
+            "serial_number": self._product_details["serial"],
+            "hw_version": self._product_details["build"],
+            "model_id": self._product_details["features"],
+        }
+
+    @property
     def extra_state_attributes(self):
         """Return the state attributes of this device."""
         attr = {}
-        attr["description"] = self._desc
-        attr["destination_name"] = self._dest_name
-        attr["source_name"] = self._src_name
         if self._last_updated is not None:
             attr["Last Updated"] = self._last_updated
         return attr
