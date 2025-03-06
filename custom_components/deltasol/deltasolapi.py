@@ -21,9 +21,10 @@ DeltasolEndpoint = namedtuple(
 class DeltasolApi(object):
     """Wrapper class for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB."""
 
-    def __init__(self, username, password, host, api_key):
+    def __init__(self, username, password, host, port, api_key):
         self.data = None
         self.host = host
+        self.port = port
         self.username = username
         self.password = password
         self.api_key = api_key
@@ -64,7 +65,7 @@ class DeltasolApi(object):
             return self.product
 
         try:
-            url = f"http://{self.host}/cgi-bin/get_resol_device_information"
+            url = f"http://{self.host}:{self.port}/cgi-bin/get_resol_device_information"
             _LOGGER.info(f"Auto detecting Resol product from {url}")
             response = requests.request("GET", url)
             if response.status_code == 200:
@@ -115,7 +116,7 @@ class DeltasolApi(object):
 
         response = {}
 
-        url = f"http://{self.host}/cgi-bin/resol-webservice"
+        url = f"http://{self.host}:{self.port}/cgi-bin/resol-webservice"
         _LOGGER.debug(f"KM2 requesting sensor data url {url}")
 
         try:
@@ -156,7 +157,7 @@ class DeltasolApi(object):
 
         response = {}
 
-        url = f"http://{self.host}/dlx/download/live"
+        url = f"http://{self.host}:{self.port}/dlx/download/live"
         debugMessage = f"DLX requesting sensor data url {url}"
 
         if self.username is not None and self.password is not None:

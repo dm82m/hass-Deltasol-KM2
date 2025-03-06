@@ -26,6 +26,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_HOST,
+    CONF_PORT,
     CONF_NAME,
     CONF_PASSWORD,
     CONF_SCAN_INTERVAL,
@@ -49,6 +50,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA_BASE.extend(
         vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
         vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(minutes=5)): cv.time_period,
         vol.Required(CONF_HOST): cv.string,
+        vol.Required(CONF_PORT): cv.port,
         vol.Optional(CONF_USERNAME): cv.string,
         vol.Optional(CONF_PASSWORD): cv.string,
         vol.Optional(CONF_API_KEY): cv.string,
@@ -105,6 +107,7 @@ class DetlasolCoordinator(DataUpdateCoordinator):
             config.data.get(CONF_USERNAME),
             config.data.get(CONF_PASSWORD),
             config.data.get(CONF_HOST),
+            config.data.get(CONF_PORT),
             config.data.get(CONF_API_KEY),
         )
         super().__init__(

@@ -11,6 +11,7 @@ from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_HOST,
+    CONF_PORT,
     CONF_PASSWORD,
     CONF_SCAN_INTERVAL,
     CONF_USERNAME,
@@ -28,6 +29,7 @@ _LOGGER = logging.getLogger(__name__)
 CONFIG_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_HOST): cv.string,
+        vol.Required(CONF_PORT, default=80): int,
         vol.Optional(CONF_USERNAME): cv.string,
         vol.Optional(CONF_PASSWORD): cv.string,
         vol.Optional(CONF_SCAN_INTERVAL, default=5): int,
@@ -46,6 +48,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
         data.get(CONF_USERNAME),
         data.get(CONF_PASSWORD),
         data.get(CONF_HOST),
+        data.get(CONF_PORT),
         data.get(CONF_API_KEY),
     )
 
@@ -110,6 +113,7 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 user_input[CONF_HOST] = config.data[CONF_HOST]
+                user_input[CONF_PORT] = config.data[CONF_PORT]
                 await validate_input(self.hass, user_input)
             except CannotConnect:
                 errors["base"] = "cannot_connect"
@@ -158,7 +162,8 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
         _LOGGER.warning("IMPORT DATA: %s", import_data)
         try:
             user_input = {
-                CONF_HOST: import_data[CONF_HOST],
+                CONF_HOST: import_data[CONF_HOST].split(':')[0] if ':' in import_data[CONF_HOST] else import_data[CONF_HOST],
+                CONF_PORT: import_data[CONF_HOST].split(':')[1] if ':' in import_data[CONF_HOST] else 80,
                 CONF_USERNAME: import_data.get(CONF_USERNAME),
                 CONF_PASSWORD: import_data.get(CONF_PASSWORD),
                 CONF_SCAN_INTERVAL: import_data.get(
