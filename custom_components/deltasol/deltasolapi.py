@@ -14,7 +14,7 @@ from requests.exceptions import RequestException
 from .const import _LOGGER
 
 DeltasolEndpoint = namedtuple(
-    "DeltasolEndpoint", "name, value, unit, description, bus_dest, bus_src"
+    "DeltasolEndpoint", "name, value, unit, description, bus_dest, bus_src, product_details"
 )
 
 
@@ -29,6 +29,7 @@ class DeltasolApi(object):
         self.password = password
         self.api_key = api_key
         self.product = None
+        self.product_details = None
 
     def __parse_data(self, response):
         data = {}
@@ -54,6 +55,7 @@ class DeltasolApi(object):
                     description=header["description"],
                     bus_dest=header["destination_name"],
                     bus_src=header["source_name"],
+                    product_details=self.product_details,
                 )
                 iField += 1
             iHeader += 1
@@ -74,6 +76,16 @@ class DeltasolApi(object):
                 if matches:
                     self.product = matches.group(1).lower()
                     _LOGGER.info(f"Detected Resol product: {self.product}")
+                    product_details = {
+                        'vendor': re.search(r'vendor\s=\s["](.*?)["]', response.text).group(1),
+                        'serial': re.search(r'serial\s=\s["](.*?)["]', response.text).group(1),
+                        'version': re.search(r'version\s=\s["](.*?)["]', response.text).group(1),
+                        'build': re.search(r'build\s=\s["](.*?)["]', response.text).group(1),
+                        'name': re.search(r'name\s=\s["](.*?)["]', response.text).group(1),
+                        'features': re.search(r'features\s=\s["](.*?)["]', response.text).group(1),
+                    }
+                    self.product_details = product_details
+                    _LOGGER.debug(f"Product Details: {product_details}")                    
                 else:
                     error = "Your device was reachable but we could not correctly detect it, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
                     _LOGGER.error(error)
