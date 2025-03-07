@@ -1,7 +1,9 @@
 """Sensor entities."""
 
 from collections import defaultdict
+from collections.abc import Mapping
 import logging
+from typing import Any
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -9,12 +11,17 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import SOURCE_IMPORT
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfTemperature
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityCategory
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.util import dt as dt_util
 
-from . import DeltasolConfigEntry
+from . import DeltasolConfigEntry, DeltasolCoordinator
 from .const import DOMAIN
+from .deltasolapi import DeltasolEndpoint
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,7 +33,7 @@ async def async_setup_platform(
     discovery_info=None,
 ):
     """Platform setup for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB sensors."""
-
+    # This function can be removed in a future version when migration to config flow completed.
     if (
         not hass.config_entries.async_entries(DOMAIN)
         and config.get("platform") == DOMAIN
@@ -38,6 +45,12 @@ async def async_setup_platform(
                 context={"source": SOURCE_IMPORT},
                 data=config,
             )
+        )
+
+    if config.get("platform") == DOMAIN:
+        _LOGGER.error(
+            "The %s integration has been migrated to use a config flow setup.  Please delete the entry in configuration.yaml",
+            DOMAIN,
         )
 
     return True
@@ -56,7 +69,7 @@ async def async_setup_entry(
     )
 
 
-class DeltasolSensor(SensorEntity):
+class DeltasolSensor(CoordinatorEntity, SensorEntity):
     """Representation of a Resol sensor."""
 
     icon_mapper = defaultdict(
@@ -72,124 +85,106 @@ class DeltasolSensor(SensorEntity):
         },
     )
 
-    def __init__(self, coordinator, unique_id, endpoint) -> None:
+    def __init__(
+        self,
+        coordinator: DeltasolCoordinator,
+        unique_id: str,
+        endpoint: DeltasolEndpoint,
+    ) -> None:
         """Initialize the sensor."""
-        self.coordinator = coordinator
-        self._last_updated = None
-        self._unique_id = unique_id
-        self._name = endpoint.name
-        self._icon = DeltasolSensor.icon_mapper[endpoint.unit]
+        super().__init__(coordinator)
+
+        # Set correct type for coordinator
+        self.coordinator: DeltasolCoordinator = coordinator
+
+        self._attr_unique_id = unique_id
+        self._endpoint = endpoint
+
+        self._last_updated = dt_util.now()
+        self._attr_unique_id = unique_id
+        self._attr_name = endpoint.name
+        self._attr_icon = DeltasolSensor.icon_mapper[endpoint.unit]
+
         self._unit = endpoint.unit
-        self._state = self.state
-        self._desc = endpoint.description
-        self._dest_name = endpoint.bus_dest
-        self._src_name = endpoint.bus_src
+        self._state = None
 
-        self._product_details = endpoint.product_details
-
-        # Set entity category to diagnostic for sensors with no unit
+        # Set entity category to diagnostic and disabled for sensors with no unit
         if not endpoint.unit:
             self._attr_entity_category = EntityCategory.DIAGNOSTIC
-
-        # If diagnostics entity then disable sensor by default
-        if not endpoint.unit:
             self._attr_entity_registry_enabled_default = False
-
-    @property
-    def should_poll(self):
-        """No need to poll. Coordinator notifies entity of updates."""
-        return False
 
     @property
     def available(self):
         """Return if entity is available."""
         return self.coordinator.last_update_success
 
-    async def async_added_to_hass(self):
-        """When entity is added to hass."""
-        self.coordinator.async_add_listener(self.async_write_ha_state)
-
-    async def async_will_remove_from_hass(self):
-        """When entity will be removed from hass."""
-        self.coordinator.async_remove_listener(self.async_write_ha_state)
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._last_updated = dt_util.now()
+        _LOGGER.debug("Updating %s", self.name)
 
     @property
-    def name(self):
-        """Return the name of the sensor."""
-        return self._name
-
-    @property
-    def unique_id(self):
-        """Return the unique ID of the binary sensor."""
-        return self._unique_id
-
-    @property
-    def icon(self):
-        """Icon to use in the frontend, if any."""
-        return self._icon
-
-    @property
-    def state(self):
-        """Return the state of the sensor."""
+    def native_value(self):
+        """Return the value reported by the sensor."""
         try:
-            state = self.coordinator.data[self._unique_id].value
+            state = self.coordinator.data[self.unique_id].value
             if state:
                 return state
         except KeyError:
-            _LOGGER.error("Can't find %s", self._name)
+            _LOGGER.error("Can't find %s", self.name)
             _LOGGER.debug("Sensor data %s", self.coordinator.data)
             return None
         else:
             return 0
 
     @property
-    def unit_of_measurement(self):
+    def native_unit_of_measurement(self) -> str | None:
         """Return the unit of measurement of this entity, if any."""
-        return self._unit
+        return self._endpoint.unit
 
     @property
-    def device_class(self):
+    def device_class(self) -> SensorDeviceClass | None:
         """Return the device class of this entity, if any."""
-        if self._unit == "°C":
+        if self._unit == UnitOfTemperature.CELSIUS:
             return SensorDeviceClass.TEMPERATURE
-        if self._unit == "%":
+        if self._unit == PERCENTAGE:
             return SensorDeviceClass.POWER_FACTOR
-        if self._unit == "Wh":
+        if self._unit == UnitOfEnergy.WATT_HOUR:
             return SensorDeviceClass.ENERGY
         return None
 
     @property
-    def state_class(self):
+    def state_class(self) -> SensorStateClass | str | None:
         """Return the state class of this entity, if any."""
-        if self._unit == "°C":
+        if self._unit == UnitOfTemperature.CELSIUS:
             return SensorStateClass.MEASUREMENT
-        if self._unit == "Wh":
+        if self._unit == UnitOfEnergy.WATT_HOUR:
             return SensorStateClass.TOTAL_INCREASING
         return None
 
     @property
-    def device_info(self):
+    def device_info(self) -> DeviceInfo:
         """Return device specific attributes."""
         # Device unique identifier is the serial
-        return {
-            "identifiers": {(DOMAIN, self._product_details["serial"] + "_" + self._src_name)},
-            "name": self._src_name,
-            "manufacturer": self._product_details["vendor"],
-            "model": self._product_details["name"],
-            "sw_version": self._product_details["version"],
-            "serial_number": self._product_details["serial"],
-            "hw_version": self._product_details["build"],
-            "model_id": self._product_details["features"],
-        }
+        product_details = self._endpoint.product_details
+        return DeviceInfo(
+            identifiers={
+                (DOMAIN, product_details["serial"] + "_" + self._endpoint.bus_src)
+            },
+            name=self._endpoint.bus_src,
+            manufacturer=product_details["vendor"],
+            model=product_details["name"],
+            sw_version=product_details["version"],
+            serial_number=product_details["serial"],
+            hw_version=product_details["build"],
+            model_id=product_details["features"],
+        )
 
     @property
-    def extra_state_attributes(self):
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:
         """Return the state attributes of this device."""
         attr = {}
         if self._last_updated is not None:
             attr["Last Updated"] = self._last_updated
         return attr
-
-    async def async_update(self):
-        """Update Entity. Only used by the generic entity update service."""
-        await self.coordinator.async_request_refresh()

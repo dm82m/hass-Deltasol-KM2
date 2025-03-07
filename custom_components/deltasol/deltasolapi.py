@@ -4,24 +4,29 @@ Author: dm82m
 https://github.com/dm82m/hass-Deltasol-KM2
 """
 
-import requests
-import datetime
-import re
 from collections import namedtuple
-from homeassistant.exceptions import IntegrationError
+import datetime
+import logging
+import re
+
+import requests
 from requests.exceptions import RequestException
 
-from .const import _LOGGER
+from homeassistant.exceptions import IntegrationError
+
+_LOGGER = logging.getLogger(__name__)
 
 DeltasolEndpoint = namedtuple(
-    "DeltasolEndpoint", "name, value, unit, description, bus_dest, bus_src, product_details"
+    "DeltasolEndpoint",
+    "name, value, unit, description, bus_dest, bus_src, product_details",
 )
 
 
-class DeltasolApi(object):
+class DeltasolApi:
     """Wrapper class for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB."""
 
-    def __init__(self, username, password, host, port, api_key):
+    def __init__(self, username, password, host, port, api_key) -> None:
+        """Initialise api."""
         self.data = None
         self.host = host
         self.port = port
@@ -31,7 +36,7 @@ class DeltasolApi(object):
         self.product = None
         self.product_details = None
 
-    def __parse_data(self, response):
+    def __parse_data(self, response) -> dict[str, DeltasolEndpoint]:
         data = {}
 
         iHeader = 0
@@ -77,15 +82,27 @@ class DeltasolApi(object):
                     self.product = matches.group(1).lower()
                     _LOGGER.info(f"Detected Resol product: {self.product}")
                     product_details = {
-                        'vendor': re.search(r'vendor\s=\s["](.*?)["]', response.text).group(1),
-                        'serial': re.search(r'serial\s=\s["](.*?)["]', response.text).group(1),
-                        'version': re.search(r'version\s=\s["](.*?)["]', response.text).group(1),
-                        'build': re.search(r'build\s=\s["](.*?)["]', response.text).group(1),
-                        'name': re.search(r'name\s=\s["](.*?)["]', response.text).group(1),
-                        'features': re.search(r'features\s=\s["](.*?)["]', response.text).group(1),
+                        "vendor": re.search(
+                            r'vendor\s=\s["](.*?)["]', response.text
+                        ).group(1),
+                        "serial": re.search(
+                            r'serial\s=\s["](.*?)["]', response.text
+                        ).group(1),
+                        "version": re.search(
+                            r'version\s=\s["](.*?)["]', response.text
+                        ).group(1),
+                        "build": re.search(
+                            r'build\s=\s["](.*?)["]', response.text
+                        ).group(1),
+                        "name": re.search(r'name\s=\s["](.*?)["]', response.text).group(
+                            1
+                        ),
+                        "features": re.search(
+                            r'features\s=\s["](.*?)["]', response.text
+                        ).group(1),
                     }
                     self.product_details = product_details
-                    _LOGGER.debug(f"Product Details: {product_details}")                    
+                    _LOGGER.debug(f"Product Details: {product_details}")
                 else:
                     error = "Your device was reachable but we could not correctly detect it, please file an issue at: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
                     _LOGGER.error(error)
@@ -102,7 +119,7 @@ class DeltasolApi(object):
 
         return self.product
 
-    def fetch_data(self):
+    def fetch_data(self) -> dict[str, DeltasolEndpoint] | None:
         """Use api to get data"""
 
         try:

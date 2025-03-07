@@ -11,8 +11,8 @@ from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_HOST,
-    CONF_PORT,
     CONF_PASSWORD,
+    CONF_PORT,
     CONF_SCAN_INTERVAL,
     CONF_USERNAME,
 )
@@ -134,9 +134,7 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
                     vol.Required(
                         CONF_HOST, default=config.data.get(CONF_HOST)
                     ): cv.string,
-                    vol.Required(
-                        CONF_PORT, default=config.data.get(CONF_PORT)
-                    ): int,
+                    vol.Required(CONF_PORT, default=config.data.get(CONF_PORT)): int,
                     vol.Optional(
                         CONF_USERNAME, default=config.data.get(CONF_USERNAME, "")
                     ): cv.string,
@@ -163,13 +161,18 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
         and create an entry if valid. Otherwise, we will delegate to the user
         step so that the user can continue the config flow.
         """
+        # This function can be removed in a future version when migration to config flow completed.
         errors = {}
         user_input = {}
         _LOGGER.warning("IMPORT DATA: %s", import_data)
         try:
             user_input = {
-                CONF_HOST: import_data[CONF_HOST].split(':')[0] if ':' in import_data[CONF_HOST] else import_data[CONF_HOST],
-                CONF_PORT: import_data[CONF_HOST].split(':')[1] if ':' in import_data[CONF_HOST] else 80,
+                CONF_HOST: import_data[CONF_HOST].split(":")[0]
+                if ":" in import_data[CONF_HOST]
+                else import_data[CONF_HOST],
+                CONF_PORT: import_data[CONF_HOST].split(":")[1]
+                if ":" in import_data[CONF_HOST]
+                else 80,
                 CONF_USERNAME: import_data.get(CONF_USERNAME),
                 CONF_PASSWORD: import_data.get(CONF_PASSWORD),
                 CONF_SCAN_INTERVAL: import_data.get(

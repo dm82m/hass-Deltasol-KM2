@@ -26,9 +26,9 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_HOST,
-    CONF_PORT,
     CONF_NAME,
     CONF_PASSWORD,
+    CONF_PORT,
     CONF_SCAN_INTERVAL,
     CONF_USERNAME,
     Platform,
@@ -39,7 +39,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .const import DEFAULT_NAME, DEFAULT_SCAN_INTERVAL, DEFAULT_TIMEOUT
-from .deltasolapi import DeltasolApi
+from .deltasolapi import DeltasolApi, DeltasolEndpoint
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -67,6 +67,13 @@ class RuntimeData:
     coordinator: DataUpdateCoordinator
 
 
+async def async_setup(hass: HomeAssistant, config):
+    """Set up yaml entry."""
+
+    # This function can be removed in a future version when migration to config flow completed.
+    return True
+
+
 async def async_setup_entry(
     hass: HomeAssistant, config_entry: DeltasolConfigEntry
 ) -> bool:
@@ -74,7 +81,7 @@ async def async_setup_entry(
 
     # Initialise the coordinator that manages data updates from your api.
     # This is defined in below
-    coordinator = DetlasolCoordinator(hass, config_entry)
+    coordinator = DeltasolCoordinator(hass, config_entry)
 
     # Perform an initial data load from api.
     # async_config_entry_first_refresh() is special in that it does not log errors if it fails
@@ -97,8 +104,10 @@ async def async_setup_entry(
     return True
 
 
-class DetlasolCoordinator(DataUpdateCoordinator):
+class DeltasolCoordinator(DataUpdateCoordinator):
     """Coordinator class."""
+
+    data: dict[str, DeltasolEndpoint]
 
     def __init__(self, hass: HomeAssistant, config: DeltasolConfigEntry) -> None:
         """Initialize coordinator."""
