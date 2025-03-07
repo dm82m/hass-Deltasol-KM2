@@ -59,7 +59,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     except IntegrationError as err:
         raise CannotConnect from err
 
-    return {"title": DEFAULT_NAME}
+    return {"title": data.get(CONF_HOST) + ":" + str(data.get(CONF_PORT))}
 
 
 class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
