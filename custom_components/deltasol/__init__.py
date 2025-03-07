@@ -28,7 +28,7 @@ from homeassistant.exceptions import IntegrationError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-from .const import DEFAULT_NAME, DEFAULT_SCAN_INTERVAL, DEFAULT_TIMEOUT
+from .const import DEFAULT_NAME, DEFAULT_SCAN_INTERVAL, MIN_SCAN_INTERVAL, DEFAULT_TIMEOUT
 from .deltasolapi import DeltasolApi
 
 _LOGGER = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 PLATFORM_SCHEMA = PLATFORM_SCHEMA_BASE.extend(
     {
         vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-        vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(minutes=5)): cv.time_period,
+        vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(seconds=DEFAULT_SCAN_INTERVAL)): cv.time_period,
         vol.Required(CONF_HOST): cv.string,
         vol.Required(CONF_PORT): cv.port,
         vol.Optional(CONF_USERNAME): cv.string,
@@ -110,7 +110,7 @@ class DetlasolCoordinator(DataUpdateCoordinator):
                 timedelta(
                     seconds=config.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
                 ),
-                timedelta(minutes=1),
+                timedelta(seconds=MIN_SCAN_INTERVAL),
             ),
         )
 

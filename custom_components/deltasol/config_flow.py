@@ -32,7 +32,7 @@ CONFIG_DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_PORT, default=80): int,
         vol.Optional(CONF_USERNAME): cv.string,
         vol.Optional(CONF_PASSWORD): cv.string,
-        vol.Optional(CONF_SCAN_INTERVAL, default=5): int,
+        vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): int,
         vol.Optional(CONF_API_KEY): cv.string,
     }
 )
@@ -145,7 +145,7 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
                     ): cv.string,
                     vol.Optional(
                         CONF_SCAN_INTERVAL,
-                        default=config.data.get(CONF_SCAN_INTERVAL),
+                        default=config.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
                     ): int,
                     vol.Optional(
                         CONF_API_KEY, default=config.data.get(CONF_API_KEY, "")

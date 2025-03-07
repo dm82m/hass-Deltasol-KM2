@@ -16,8 +16,8 @@
           "Port": "Port",
           "username": "Username",
           "password": "Password",
-          "api_key": "API key",
-          "scan_interval": "Scan interval"
+          "scan_interval": "Scan interval (seconds)",
+          "api_key": "API key"
         }
       },
       "reconfigure": {
@@ -26,8 +26,8 @@
           "port": "Port",
           "username": "Username",
           "password": "Password",
-          "api_key": "API key",
-          "scan_interval": "Scan interval"
+          "scan_interval": "Scan interval (seconds)",
+          "api_key": "API key"
         }
       }
     }
