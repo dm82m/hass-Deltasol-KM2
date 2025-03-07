@@ -131,18 +131,24 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="reconfigure",
             data_schema=vol.Schema(
                 {
+                    vol.Required(
+                        CONF_HOST, default=config.data.get(CONF_HOST)
+                    ): cv.string,
+                    vol.Required(
+                        CONF_PORT, default=config.data.get(CONF_PORT)
+                    ): int,
+                    vol.Optional(
+                        CONF_USERNAME, default=config.data.get(CONF_USERNAME, "")
+                    ): cv.string,
+                    vol.Optional(
+                        CONF_PASSWORD, default=config.data.get(CONF_PASSWORD, "")
+                    ): cv.string,
                     vol.Optional(
                         CONF_SCAN_INTERVAL,
                         default=config.data.get(CONF_SCAN_INTERVAL),
                     ): int,
                     vol.Optional(
-                        CONF_USERNAME, default=config.data.get(CONF_USERNAME)
-                    ): cv.string,
-                    vol.Optional(
-                        CONF_PASSWORD, default=config.data.get(CONF_PASSWORD)
-                    ): cv.string,
-                    vol.Optional(
-                        CONF_API_KEY, default=config.data.get(CONF_API_KEY)
+                        CONF_API_KEY, default=config.data.get(CONF_API_KEY, "")
                     ): cv.string,
                 }
             ),
