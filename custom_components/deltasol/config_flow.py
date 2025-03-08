@@ -171,12 +171,12 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
                 CONF_PORT: import_data[CONF_HOST].split(":")[1]
                 if ":" in import_data[CONF_HOST]
                 else 80,
-                CONF_USERNAME: import_data.get(CONF_USERNAME),
-                CONF_PASSWORD: import_data.get(CONF_PASSWORD),
+                CONF_USERNAME: import_data.get(CONF_USERNAME, ""),
+                CONF_PASSWORD: import_data.get(CONF_PASSWORD, ""),
                 CONF_SCAN_INTERVAL: import_data.get(
                     CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
                 ),
-                CONF_API_KEY: import_data.get(CONF_API_KEY),
+                CONF_API_KEY: import_data.get(CONF_API_KEY, ""),
             }
         except (HomeAssistantError, KeyError):
             _LOGGER.debug(
