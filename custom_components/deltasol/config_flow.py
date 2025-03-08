@@ -141,7 +141,7 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
                     ): cv.string,
                     vol.Optional(
                         CONF_SCAN_INTERVAL,
-                        default=config.data.get(CONF_SCAN_INTERVAL),
+                        default=config.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
                     ): int,
                     vol.Optional(
                         CONF_API_KEY, default=config.data.get(CONF_API_KEY, "")
