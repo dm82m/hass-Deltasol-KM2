@@ -38,11 +38,11 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 PLATFORM_SCHEMA = PLATFORM_SCHEMA_BASE.extend(
     {
         vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-        vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(seconds=DEFAULT_SCAN_INTERVAL)): cv.time_period,
         vol.Required(CONF_HOST): cv.string,
         vol.Required(CONF_PORT): cv.port,
         vol.Optional(CONF_USERNAME): cv.string,
         vol.Optional(CONF_PASSWORD): cv.string,
+        vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
         vol.Optional(CONF_API_KEY): cv.string,
     }
 )

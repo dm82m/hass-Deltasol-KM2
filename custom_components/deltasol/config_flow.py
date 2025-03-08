@@ -20,7 +20,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, IntegrationError
 from homeassistant.helpers import config_validation as cv
 
-from .const import DEFAULT_NAME, DEFAULT_SCAN_INTERVAL, DOMAIN
+from .const import DEFAULT_NAME, DEFAULT_SCAN_INTERVAL, MIN_SCAN_INTERVAL, DOMAIN
 from .deltasolapi import DeltasolApi
 
 _LOGGER = logging.getLogger(__name__)
@@ -29,10 +29,10 @@ _LOGGER = logging.getLogger(__name__)
 CONFIG_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_HOST): cv.string,
-        vol.Required(CONF_PORT, default=80): int,
+        vol.Required(CONF_PORT, default=80): cv.port,
         vol.Optional(CONF_USERNAME): cv.string,
         vol.Optional(CONF_PASSWORD): cv.string,
-        vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): int,
+        vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
         vol.Optional(CONF_API_KEY): cv.string,
     }
 )
@@ -136,7 +136,7 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
                     ): cv.string,
                     vol.Required(
                         CONF_PORT, default=config.data.get(CONF_PORT)
-                    ): int,
+                    ): cv.port,
                     vol.Optional(
                         CONF_USERNAME, default=config.data.get(CONF_USERNAME, "")
                     ): cv.string,
@@ -146,7 +146,7 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
                     vol.Optional(
                         CONF_SCAN_INTERVAL,
                         default=config.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
-                    ): int,
+                    ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
                     vol.Optional(
                         CONF_API_KEY, default=config.data.get(CONF_API_KEY, "")
                     ): cv.string,
