@@ -32,7 +32,6 @@
         "data": {
           "host": "Host",
           "port": "Port",
-          "port": "Port",
           "username": "Username",
           "password": "Password",
           "scan_interval": "Scan interval (seconds)",
