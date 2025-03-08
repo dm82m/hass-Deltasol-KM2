@@ -1,4 +1,4 @@
-"""Config flow for Integration 101 Template integration."""
+"""Config flow for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB component."""
 
 from __future__ import annotations
 
@@ -162,7 +162,7 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
         # This function can be removed in a future version when migration to config flow completed.
         errors = {}
         user_input = {}
-        _LOGGER.warning("IMPORT DATA: %s", import_data)
+        _LOGGER.warning("Importing old configuration of 'configuration.yaml': %s", import_data)
         try:
             user_input = {
                 CONF_HOST: import_data[CONF_HOST].split(":")[0]

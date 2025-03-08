@@ -166,7 +166,7 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return device specific attributes."""
-        # Device unique identifier is the serial
+        # Device unique identifier is the serial + bus_src
         product_details = self._endpoint.product_details
         return DeviceInfo(
             identifiers={
