@@ -20,7 +20,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, IntegrationError
 from homeassistant.helpers import config_validation as cv
 
-from .const import DEFAULT_NAME, DEFAULT_SCAN_INTERVAL, DOMAIN
+from .const import DEFAULT_NAME, DEFAULT_PORT, DEFAULT_SCAN_INTERVAL, DOMAIN
 from .deltasolapi import DeltasolApi
 
 _LOGGER = logging.getLogger(__name__)
@@ -29,10 +29,10 @@ _LOGGER = logging.getLogger(__name__)
 CONFIG_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_HOST): cv.string,
-        vol.Required(CONF_PORT, default=80): int,
+        vol.Required(CONF_PORT, default=DEFAULT_PORT): int,
         vol.Optional(CONF_USERNAME): cv.string,
         vol.Optional(CONF_PASSWORD): cv.string,
-        vol.Optional(CONF_SCAN_INTERVAL, default=5): int,
+        vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): int,
         vol.Optional(CONF_API_KEY): cv.string,
     }
 )
@@ -103,29 +103,27 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Add reconfigure step to allow to reconfigure a config entry."""
-        # This methid displays a reconfigure option in the integration and is
+        # This method displays a reconfigure option in the integration and is
         # different to options.
         # It can be used to reconfigure any of the data submitted when first installed.
         # This is optional and can be removed if you do not want to allow reconfiguration.
         errors: dict[str, str] = {}
-        config = self.hass.config_entries.async_get_entry(self.context["entry_id"])
+        config = self._get_reconfigure_entry()
 
         if user_input is not None:
             try:
-                user_input[CONF_HOST] = config.data[CONF_HOST]
-                user_input[CONF_PORT] = config.data[CONF_PORT]
-                await validate_input(self.hass, user_input)
+                info = await validate_input(self.hass, user_input)
             except CannotConnect:
                 errors["base"] = "cannot_connect"
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
             else:
+                await self.async_set_unique_id(info.get("title"))
+                self._abort_if_unique_id_mismatch()
                 return self.async_update_reload_and_abort(
                     config,
-                    unique_id=config.unique_id,
-                    data={**config.data, **user_input},
-                    reason="reconfigure_successful",
+                    data_updates=user_input,
                 )
         return self.async_show_form(
             step_id="reconfigure",

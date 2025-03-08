@@ -34,11 +34,16 @@ from homeassistant.const import (
     Platform,
 )
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import IntegrationError
+from homeassistant.exceptions import ConfigEntryNotReady, IntegrationError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-from .const import DEFAULT_NAME, DEFAULT_SCAN_INTERVAL, DEFAULT_TIMEOUT
+from .const import (
+    DEFAULT_NAME,
+    DEFAULT_SCAN_INTERVAL,
+    DEFAULT_TIMEOUT,
+    MIN_SCAN_INTERVAL,
+)
 from .deltasolapi import DeltasolApi, DeltasolEndpoint
 
 _LOGGER = logging.getLogger(__name__)
@@ -88,9 +93,8 @@ async def async_setup_entry(
     await coordinator.async_config_entry_first_refresh()
 
     # Test to see if api initialised correctly, else raise ConfigNotReady to make HA retry setup
-    # TODO: Change this to match how your api will know if connected or successful update
-    # if not coordinator.api.connected:
-    #    raise ConfigEntryNotReady
+    if not coordinator.api.product_details:
+        raise ConfigEntryNotReady
 
     # Add the coordinator and update listener to config runtime data to make
     # accessible throughout your integration
@@ -102,6 +106,17 @@ async def async_setup_entry(
 
     # Return true to denote a successful setup.
     return True
+
+
+async def async_unload_entry(
+    hass: HomeAssistant, config_entry: DeltasolConfigEntry
+) -> bool:
+    """Unload a config entry."""
+    # This is called when you remove your integration or shutdown HA.
+    # If you have created any custom services, they need to be removed here too.
+
+    # Unload platforms and return result
+    return await hass.config_entries.async_unload_platforms(config_entry, PLATFORMS)
 
 
 class DeltasolCoordinator(DataUpdateCoordinator):
@@ -125,11 +140,11 @@ class DeltasolCoordinator(DataUpdateCoordinator):
             name="deltasol_sensor",
             update_method=self.async_update_data,
             # Polling interval. Will only be polled if there are subscribers.
-            update_interval=max(
-                timedelta(
-                    seconds=config.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-                ),
-                timedelta(minutes=1),
+            update_interval=timedelta(
+                seconds=max(
+                    config.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
+                    MIN_SCAN_INTERVAL,
+                )
             ),
         )
 
