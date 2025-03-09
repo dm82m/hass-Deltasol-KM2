@@ -4,7 +4,7 @@ from collections import defaultdict
 from collections.abc import Mapping
 import logging
 from typing import Any
-
+from datetime import date
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -152,6 +152,8 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
             return SensorDeviceClass.POWER_FACTOR
         if self._unit == UnitOfEnergy.WATT_HOUR:
             return SensorDeviceClass.ENERGY
+        if isinstance(self.coordinator.data[self.unique_id].value, date):
+            return SensorDeviceClass.DATE
         return None
 
     @property
