@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from typing import Any
+from datetime import timedelta
 
 import voluptuous as vol
 
@@ -20,7 +21,13 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, IntegrationError
 from homeassistant.helpers import config_validation as cv
 
-from .const import DEFAULT_NAME, DEFAULT_PORT, MIN_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL, DOMAIN
+from .const import (
+    DEFAULT_NAME,
+    DEFAULT_PORT,
+    MIN_SCAN_INTERVAL,
+    DEFAULT_SCAN_INTERVAL,
+    DOMAIN
+)
 from .deltasolapi import DeltasolApi
 
 _LOGGER = logging.getLogger(__name__)
@@ -164,6 +171,9 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
         user_input = {}
         _LOGGER.warning("Importing old configuration of 'configuration.yaml': %s", import_data)
         try:
+            conf_scan_interval_sec = import_data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+            if isinstance(conf_scan_interval_sec, timedelta):
+                conf_scan_interval_sec = conf_scan_interval_sec.total_seconds()
             user_input = {
                 CONF_HOST: import_data[CONF_HOST].split(":")[0]
                 if ":" in import_data[CONF_HOST]
@@ -173,9 +183,7 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
                 else 80,
                 CONF_USERNAME: import_data.get(CONF_USERNAME, ""),
                 CONF_PASSWORD: import_data.get(CONF_PASSWORD, ""),
-                CONF_SCAN_INTERVAL: import_data.get(
-                    CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
-                ),
+                CONF_SCAN_INTERVAL: conf_scan_interval_sec,
                 CONF_API_KEY: import_data.get(CONF_API_KEY, ""),
             }
         except (HomeAssistantError, KeyError):
