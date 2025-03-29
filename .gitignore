@@ -74,5 +74,5 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-
+.devcontainer/
 .vscode
