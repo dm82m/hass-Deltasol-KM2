@@ -2,7 +2,7 @@
   "config": {
     "abort": {
       "already_configured": "Il device è già configurato",
-      "reconfigure_successful": "Riconfingurazione completata con successo"
+      "reconfigure_successful": "Riconfigurazione completata con successo"
     },
     "error": {
       "cannot_connect": "Impossibile connettersi",
