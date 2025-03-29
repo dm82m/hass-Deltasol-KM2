@@ -1,0 +1,51 @@
+{
+  "config": {
+    "title": "Deltasol",
+    "abort": {
+      "already_configured": "Il device è già configurato",
+      "reconfigure_successful": "Riconfingurazione completata con successo"
+    },
+    "error": {
+      "cannot_connect": "Impossibile connettersi",
+      "unknown": "Errore inaspettato"
+    },
+    "step": {
+      "user": {
+        "data": {
+          "host": "Host",
+          "port": "Porta",
+          "username": "Username",
+          "password": "Password",
+          "scan_interval": "Intervallo scansione (secondi)",
+          "api_key": "API key"
+        },
+        "data_description": {
+          "host": "Hostname o IP del tuo Resol KM2 o DL2/DL3 device o del tuo json-live-data-server. Se json-live-data-server gira come Add-on usa 127.0.0.1.",
+          "port": "Porta del tuo Resol KM2 o DL2/DL3. Default è 80. Se usi KM1, VBus/LAN o VBus/USB con json-live-data-server, la porta di default è la 3333.",
+          "username": "Username usato per loggarsi nella periferica Resol KM2 or DL2/DL3. Non necessario per KM1, VBus/LAN or VBus/USB.",
+          "password": "Password usata per loggarsi nella periferica Resol KM2 or DL2/DL3. Non necessario per KM1, VBus/LAN or VBus/USB.",
+          "scan_interval": "Definisce la frequenza di aggiornamento. Parametro opzionale in secondi. Default 300 (5 min), valore minimo 60 (1 min).",
+          "api_key": "Applicabile solo con DL2/DL3. Applica il filtro definito su DL2/DL3. Usa l'id del filtro per DL2/DL3."
+        }
+      },
+      "reconfigure": {
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "username": "Username",
+          "password": "Password",
+          "scan_interval": "Intervallo scansione (secondi)",
+          "api_key": "API key"
+        },
+        "data_description": {
+          "host": "Hostname o IP del tuo Resol KM2 o DL2/DL3 device o del tuo json-live-data-server. Se json-live-data-server gira come Add-on usa 127.0.0.1.",
+          "port": "Porta del tuo Resol KM2 o DL2/DL3. Default è 80. Se usi KM1, VBus/LAN o VBus/USB con json-live-data-server, la porta di default è la 3333.",
+          "username": "Username usato per loggarsi nella periferica Resol KM2 or DL2/DL3. Non necessario per KM1, VBus/LAN or VBus/USB.",
+          "password": "Password usata per loggarsi nella periferica Resol KM2 or DL2/DL3. Non necessario per KM1, VBus/LAN or VBus/USB.",
+          "scan_interval": "Definisce la frequenza di aggiornamento. Parametro opzionale in secondi. Default 300 (5 min), valore minimo 60 (1 min).",
+          "api_key": "Applicabile solo con DL2/DL3. Applica il filtro definito su DL2/DL3. Usa l'id del filtro per DL2/DL3."
+        }
+      }
+    }
+  }
+}
