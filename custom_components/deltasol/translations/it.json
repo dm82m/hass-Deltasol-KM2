@@ -31,7 +31,7 @@
       "reconfigure": {
         "data": {
           "host": "Host",
-          "port": "Port",
+          "port": "Porta",
           "username": "Username",
           "password": "Password",
           "scan_interval": "Intervallo scansione (secondi)",
