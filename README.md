@@ -94,11 +94,4 @@ logger:
 
 ## Credits
 
-A huge thank you to the following people for your contribution and/or inspiration:
-
-- [ostat](https://github.com/ostat)
-- [chiefdeputy](https://github.com/chiefdeputy)
-- [erikkastelec](https://github.com/erikkastelec)
-- [danielwippermann](https://github.com/danielwippermann)
-- [evercape](https://github.com/evercape)
-- [msp1974](https://github.com/msp1974)
+A huge thank you to all the [contributors](https://github.com/dm82m/hass-Deltasol-KM2/graphs/contributors) and also thank you to everyone who contributed ideas. 
