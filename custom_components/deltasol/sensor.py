@@ -123,6 +123,7 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
         """Handle updated data from the coordinator."""
         self._last_updated = dt_util.now()
         _LOGGER.debug("Updating %s", self.name)
+        self.async_write_ha_state()
 
     @property
     def native_value(self):
