@@ -41,11 +41,14 @@ custom_components
 │   ├── __init__.py
 │   ├── config_flow.py
 │   ├── const.py
+│   ├── deltasolapi.py
 │   ├── manifest.json
 │   ├── sensor.py
-│   └── deltasolapi.py  
-├────── languages
-│       └── en.json
+│   ├── strings.json
+│   └── languages
+│       ├── de.json
+│       ├── en.json
+│       └── it.json
 ```
 
 ## Configuration
