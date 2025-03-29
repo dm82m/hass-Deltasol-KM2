@@ -1,6 +1,5 @@
 {
   "config": {
-    "title": "Deltasol Integration",
     "abort": {
       "already_configured": "Gerät ist bereits konfiguriert",
       "reconfigure_successful": "Neukonfiguration erfolgreich"
