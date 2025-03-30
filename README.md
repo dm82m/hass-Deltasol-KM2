@@ -1,33 +1,59 @@
 [![version](https://img.shields.io/github/v/release/dm82m/hass-deltasol-km2?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2)
 [![downloads_total](https://img.shields.io/github/downloads/dm82m/hass-deltasol-km2/total?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/releases)
-[![downloads_latest](https://img.shields.io/github/downloads/dm82m/hass-deltasol-km2/latest/total?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/releases)<br/>
+[![downloads_latest](https://img.shields.io/github/downloads/dm82m/hass-deltasol-km2/latest/total?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/releases)
 [![maintained](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2)
 [![license](https://img.shields.io/github/license/dm82m/hass-deltasol-km2.svg?style=for-the-badge)](LICENSE)
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)<br/>
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 [![buy_me_a_coffee](https://img.shields.io/badge/If%20you%20like%20it-Buy%20me%20a%20coffee-yellow.svg?style=for-the-badge)](https://www.buymeacoffee.com/dirkmaucher)
 [![paypal](https://img.shields.io/badge/If%20you%20like%20it-PayPal%20Me-blue.svg?style=for-the-badge)](https://paypal.me/dirkmaucher)
+[![forum](https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge)](https://community.home-assistant.io/t/hass-deltasol-km2-resol-km1-km2-dl2-dl3-vbus-lan-vbus-usb/871497)
+
+[![GitHub Repo stars](https://img.shields.io/github/stars/dm82m/hass-deltasol-km2?style=flat)](https://github.com/dm82m/hass-Deltasol-KM2/stargazers) _Thanks to everyone having starred my repo! To star it click [here](https://github.com/dm82m/hass-Deltasol-KM2), then click on the star on the top right. Thanks!_
 
 # hass-Deltasol-KM2
 
 Custom component for retrieving sensor information from Resol KM1/KM2 or DL2/DL3 or VBus/LAN or VBus/USB. This component automatically determines if you are using KM1/KM2 or DL2/DL3 device and can also be set up to work with VBus/LAN or VBus/USB.
 Component uses webservice to get all the sensor data and makes it available in [Home Assistant](https://home-assistant.io/).
 
-## Release 1.0.0
+## Features
+
+### Currently Available Features
+
+- :computer: This integration supports all Resol devices: KM1/KM2, DL2/DL3, VBus/LAN and VBus/USB and is capable of auto detecting your device.
+- :star: The exclusive Filter that is only available on DL2/DL3 devices can be used with this integration!
+- :tv: This integration is fully configurable within the UI, no `yaml` configuration needed.
+- :link: If the connection to your Resol device gets lost (network issue, Add-on not yet started, ...) the integration makes retries until the connection is established.
+- :large_blue_diamond: All the data of your Resol device is shown in Home Assistant. I.e. Product Name, Serial Number, Product Features, Software Version, Hardware Version, ...
+- :small_blue_diamond: All bus devices that are connected to your Resol device are shown as device in Home Assistant with the specific bus device name. Additionally all the sensors are grouped by these bus devices to make it easier to find your desired sensors.
+- :small_orange_diamond: By default all sensors without a unit are handled as diagnostic sensors and disabled by default. You can manually enable them if needed.
+- :earth_africa: Multiple language support, currenty we have :uk:, :de: and :it:. If you speak another language, just directly open a PR or create an [issue](https://github.com/dm82m/hass-Deltasol-KM2/issues/new) for your language and provide the translation there.
+
+### Next To Come Features (Wishlist)
+
+- :arrows_counterclockwise: Better UI Configuration Flow with device detection and only showing the options that are relevant for the specific device.
+- ... more ideas? Feel free to open an issue with your idea [here](https://github.com/dm82m/hass-Deltasol-KM2/issues/new).
+
+### Bugs
+
+:bug: No software is perfect and therefore neither is this one. If you encounter a problem, please open an issue [here](https://github.com/dm82m/hass-Deltasol-KM2/issues/new).
+
+## Release 1.x.x
 
 > [!IMPORTANT]
 >
->With version 1.0.0 we are moving on to UI based configuration. The `yaml` configuration will be automtically migrated. The process is as following:
-> - Update the integration to version 1.0.0
-> - Restart Home Assistant Core
-> - Remove the old sensor definition from your `configuration.yaml`
+>With version 1.x.x we have moved on to UI based configuration. The `yaml` configuration will be automtically migrated. The process is as following:
+> - Update the integration to version 1.x.x.
+> - Restart Home Assistant Core.
+> - Remove the old sensor definition from your `configuration.yaml`.
 
 ## Installation
 
 ### HACS (preferred method)
 
-- In [HACS](https://github.com/hacs/default) Store search for dm82m/hass-Deltasol-KM2 and install it.
-- Restart Home Assistant Core
-- Activate the integration by adding it via UI `Settings` -> `Devices & Services` -> `Add Integration` -> `Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB` and follow the configuration steps below.
+- [![add_resol](https://img.shields.io/badge/Add%20Integration-Home%20Assistant-blue?style=flat)](https://my.home-assistant.io/redirect/hacs_repository/?owner=dm82m&repository=hass-Deltasol-KM2&category=integration) or go to your HACS store and search for `dm82m/hass-Deltasol-KM2`.
+- Click `Download` in the lower right side and install it.
+- Restart Home Assistant Core.
+- [![configure_resol](https://img.shields.io/badge/Configure%20Integration-Home%20Assistant-blue?style=flat)](https://my.home-assistant.io/redirect/config_flow_start/?domain=deltasol) or configure the integration by adding it via UI `Settings` -> `Devices & Services` -> `Add Integration` -> `Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB`. Then follow the configuration steps below.
 
 ### Manual install
 
@@ -50,6 +76,8 @@ custom_components
 │       ├── en.json
 │       └── it.json
 ```
+
+Restart Home Assistant Core and afterwards [![configure_resol](https://img.shields.io/badge/Configure%20Integration-Home%20Assistant-blue?style=flat)](https://my.home-assistant.io/redirect/config_flow_start/?domain=deltasol) or configure the integration by adding it via UI `Settings` -> `Devices & Services` -> `Add Integration` -> `Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB`. Then follow the configuration steps below.
 
 ## Configuration
 
@@ -84,7 +112,7 @@ If your json-live-data-server is successfully running, lets continue here.
 - Do not set `Username`, `Password` or `API key` key here, they are not needed.
 
 ## Troubleshooting
-Please set your logging for the this custom component to debug during initial setup phase. If everything works well, you are safe to remove the debug logging:
+Please set your logging for this custom component to debug during initial setup phase. If everything works well, you are safe to remove the debug logging:
 ```yaml
 logger:
   default: warn
@@ -94,4 +122,6 @@ logger:
 
 ## Credits
 
-A huge thank you to all the [contributors](https://github.com/dm82m/hass-Deltasol-KM2/graphs/contributors) and also thank you to everyone who contributed ideas. 
+A huge thank you to all the contributors and also thank you to everyone who contributed ideas.
+
+[![contributors](https://contrib.rocks/image?repo=dm82m/hass-Deltasol-KM2)](https://github.com/dm82m/hass-Deltasol-KM2/graphs/contributors)
