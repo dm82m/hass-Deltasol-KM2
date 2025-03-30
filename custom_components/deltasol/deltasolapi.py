@@ -4,15 +4,14 @@ Author: dm82m
 https://github.com/dm82m/hass-Deltasol-KM2
 """
 
-from collections import namedtuple
 import datetime
 import logging
 import re
+from collections import namedtuple
 
 import requests
-from requests.exceptions import RequestException
-
 from homeassistant.exceptions import IntegrationError
+from requests.exceptions import RequestException
 
 _LOGGER = logging.getLogger(__name__)
 

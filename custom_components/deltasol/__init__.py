@@ -5,12 +5,11 @@ Author: dm82m
 https://github.com/dm82m/hass-Deltasol-KM2"""
 
 import asyncio
+import logging
 from dataclasses import dataclass
 from datetime import timedelta
-import logging
 
 import voluptuous as vol
-
 from homeassistant.components.sensor import PLATFORM_SCHEMA_BASE
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (

@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
 from datetime import timedelta
+from typing import Any
 
 import voluptuous as vol
-
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import (
     CONF_API_KEY,
@@ -24,9 +23,9 @@ from homeassistant.helpers import config_validation as cv
 from .const import (
     DEFAULT_NAME,
     DEFAULT_PORT,
-    MIN_SCAN_INTERVAL,
     DEFAULT_SCAN_INTERVAL,
-    DOMAIN
+    DOMAIN,
+    MIN_SCAN_INTERVAL,
 )
 from .deltasolapi import DeltasolApi
 
@@ -39,7 +38,9 @@ CONFIG_DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_PORT, default=DEFAULT_PORT): cv.port,
         vol.Optional(CONF_USERNAME): cv.string,
         vol.Optional(CONF_PASSWORD): cv.string,
-        vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
+        vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.All(
+            vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)
+        ),
         vol.Optional(CONF_API_KEY): cv.string,
     }
 )
@@ -66,11 +67,13 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     except IntegrationError as err:
         raise CannotConnect from err
 
-    return {"title": f"{api.product_details["name"]}@{data.get(CONF_HOST)}:{data.get(CONF_PORT)}"}
+    return {
+        "title": f"{api.product_details["name"]}@{data.get(CONF_HOST)}:{data.get(CONF_PORT)}"
+    }
 
 
-class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Example Integration."""
+class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
+    """Handle a config flow for Resol Integration."""
 
     VERSION = 1
     _input_data: dict[str, Any]
@@ -139,7 +142,9 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
                     vol.Required(
                         CONF_HOST, default=config.data.get(CONF_HOST)
                     ): cv.string,
-                    vol.Required(CONF_PORT, default=config.data.get(CONF_PORT)): cv.port,
+                    vol.Required(
+                        CONF_PORT, default=config.data.get(CONF_PORT)
+                    ): cv.port,
                     vol.Optional(
                         CONF_USERNAME, default=config.data.get(CONF_USERNAME, "")
                     ): cv.string,
@@ -148,7 +153,9 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
                     ): cv.string,
                     vol.Optional(
                         CONF_SCAN_INTERVAL,
-                        default=config.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
+                        default=config.data.get(
+                            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+                        ),
                     ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
                     vol.Optional(
                         CONF_API_KEY, default=config.data.get(CONF_API_KEY, "")
@@ -169,18 +176,26 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
         # This function can be removed in a future version when migration to config flow completed.
         errors = {}
         user_input = {}
-        _LOGGER.warning("Importing old configuration of 'configuration.yaml': %s", import_data)
+        _LOGGER.warning(
+            "Importing old configuration of 'configuration.yaml': %s", import_data
+        )
         try:
-            conf_scan_interval_sec = import_data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+            conf_scan_interval_sec = import_data.get(
+                CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+            )
             if isinstance(conf_scan_interval_sec, timedelta):
                 conf_scan_interval_sec = conf_scan_interval_sec.total_seconds()
             user_input = {
-                CONF_HOST: import_data[CONF_HOST].split(":")[0]
-                if ":" in import_data[CONF_HOST]
-                else import_data[CONF_HOST],
-                CONF_PORT: import_data[CONF_HOST].split(":")[1]
-                if ":" in import_data[CONF_HOST]
-                else 80,
+                CONF_HOST: (
+                    import_data[CONF_HOST].split(":")[0]
+                    if ":" in import_data[CONF_HOST]
+                    else import_data[CONF_HOST]
+                ),
+                CONF_PORT: (
+                    import_data[CONF_HOST].split(":")[1]
+                    if ":" in import_data[CONF_HOST]
+                    else 80
+                ),
                 CONF_USERNAME: import_data.get(CONF_USERNAME, ""),
                 CONF_PASSWORD: import_data.get(CONF_PASSWORD, ""),
                 CONF_SCAN_INTERVAL: conf_scan_interval_sec,
