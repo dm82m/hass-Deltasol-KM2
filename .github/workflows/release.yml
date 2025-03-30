@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Pack the deltasol dir as a zip and upload to the release
       - name: ZIP deltasol Dir
@@ -18,7 +18,7 @@ jobs:
           cd ${{ github.workspace }}/custom_components/deltasol
           zip deltasol.zip -r ./
       - name: Upload zip to release
-        uses: svenstaro/upload-release-action@v1-release
+        uses: svenstaro/upload-release-action@v2
 
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
