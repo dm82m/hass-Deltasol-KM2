@@ -1,8 +1,5 @@
 {
   "name": "Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB",
-  "domains": [
-    "sensor"
-  ],
   "zip_release": true,
   "filename": "deltasol.zip",
   "render_readme": true
