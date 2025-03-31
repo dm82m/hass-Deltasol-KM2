@@ -26,7 +26,7 @@ Component uses webservice to get all the sensor data and makes it available in [
 - :large_blue_diamond: All the data of your Resol device is shown in Home Assistant. I.e. Product Name, Serial Number, Product Features, Software Version, Hardware Version, ...
 - :small_blue_diamond: All bus devices that are connected to your Resol device are shown as device in Home Assistant with the specific bus device name. Additionally all the sensors are grouped by these bus devices to make it easier to find your desired sensors.
 - :small_orange_diamond: By default all sensors without a unit are handled as diagnostic sensors and disabled by default. You can manually enable them if needed.
-- :earth_africa: Multiple language support, currenty we have :uk:, :de: and :it:. If you speak another language, just directly open a PR or create an [issue](https://github.com/dm82m/hass-Deltasol-KM2/issues/new) for your language and provide the translation there.
+- :earth_africa: Multiple language support, currenty we have :uk:, :de:, :it: and :netherlands:. If you speak another language, just directly open a PR or create an [issue](https://github.com/dm82m/hass-Deltasol-KM2/issues/new) for your language and provide the translation there.
 
 ### Next To Come Features (Wishlist)
 
@@ -74,7 +74,8 @@ custom_components
 │   └── languages
 │       ├── de.json
 │       ├── en.json
-│       └── it.json
+│       ├── it.json
+│       └── nl.json
 ```
 
 Restart Home Assistant Core and afterwards [![configure_resol](https://img.shields.io/badge/Configure%20Integration-Home%20Assistant-blue?style=flat)](https://my.home-assistant.io/redirect/config_flow_start/?domain=deltasol) or configure the integration by adding it via UI `Settings` -> `Devices & Services` -> `Add Integration` -> `Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB`. Then follow the configuration steps below.
