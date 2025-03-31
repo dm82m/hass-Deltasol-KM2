@@ -5,21 +5,51 @@ on:
     types: [published]
 
 jobs:
-  release_zip_file:
-    name: Prepare release asset
+  validate-version:
+    name: Validates if the version in manifest.json matches the release version and deletes the release if it doesn't
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      # Pack the deltasol dir as a zip and upload to the release
-      - name: ZIP deltasol Dir
+      - name: Read manifest.json Version
+        id: read_manifest
+        run: |
+          MANIFEST_VERSION=$(jq -r '.version' custom_components/deltasol/manifest.json)
+          echo "manifest_version=$MANIFEST_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Compare Versions and delete release on mismatch
+        run: |
+          if [ "${{ steps.read_manifest.outputs.manifest_version }}" != "${{ github.event.release.tag_name }}" ]; then
+            echo "::error::Version mismatch! manifest.json (${{ steps.read_manifest.outputs.manifest_version }}) ≠ Release (${{ github.event.release.tag_name }})"
+            
+            RELEASE_NOTES=$(gh release view ${{ github.event.release.tag_name }} --json body -q '.body')
+            echo "Release Notes:"
+            echo "$RELEASE_NOTES"
+
+            gh release delete "${{ github.event.release.tag_name }}" --yes || true
+            git push --delete origin "${{ github.event.release.tag_name }}" || true
+            
+            exit 1
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-zip-file:
+    name: Archive and upload release asset
+    needs: validate-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Archive release asset
         run: |
           cd ${{ github.workspace }}/custom_components/deltasol
           zip deltasol.zip -r ./
-      - name: Upload zip to release
-        uses: svenstaro/upload-release-action@v2
 
+      - name: Upload archive to released version
+        uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ github.workspace }}/custom_components/deltasol/deltasol.zip
