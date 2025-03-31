@@ -1,0 +1,78 @@
+name: 🌐 Translation Request
+description: Use this template to provide translations for a new language.
+title: "[TRANSLATION]: Add support for <language>"
+labels: ["enhancement"]
+assignees: ["dm82m"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing translations! Please specify the language you'd like to add and edit the provided JSON file below.
+
+  - type: input
+    id: language-name
+    attributes:
+      label: Language Name
+      description: Specify the language name (e.g., French, German, Spanish).
+      placeholder: "e.g., German"
+    validations:
+      required: true
+
+  - type: textarea
+    id: translation-json
+    attributes:
+      label: Translation File (`custom_components/deltasol/translations/<language_code>.json`)
+      description: Edit the JSON content below to provide translations for your language.
+      value: |
+        {
+          "config": {
+            "abort": {
+              "already_configured": "Device is already configured",
+              "reconfigure_successful": "Reconfiguration successful"
+            },
+            "error": {
+              "cannot_connect": "Failed to connect",
+              "unknown": "Unexpected error"
+            },
+            "step": {
+              "user": {
+                "data": {
+                  "host": "Host",
+                  "port": "Port",
+                  "username": "Username",
+                  "password": "Password",
+                  "scan_interval": "Scan interval (seconds)",
+                  "api_key": "API key"
+                },
+                "data_description": {
+                  "host": "Hostname or IP address of your Resol KM2 or DL2/DL3 device or your json-live-data-server. If json-live-data-server runs as Add-on use 127.0.0.1.",
+                  "port": "Port of your Resol KM2 or DL2/DL3. Defaults to 80. If you use KM1, VBus/LAN or VBus/USB with json-live-data-server, the default port is 3333.",
+                  "username": "Username used for logging in to Resol KM2 or DL2/DL3. Not needed for KM1, VBus/LAN or VBus/USB.",
+                  "password": "Password used for logging in to Resol KM2 or DL2/DL3. Not needed for KM1, VBus/LAN or VBus/USB.",
+                  "scan_interval": "Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 60 (1 min).",
+                  "api_key": "Only applicable if you are using DL2/DL3 device. Applies the filter defined on the DL2/DL3. Use the id of the DL2/DL3 defined filter here."
+                }
+              },
+              "reconfigure": {
+                "data": {
+                  "host": "Host",
+                  "port": "Port",
+                  "username": "Username",
+                  "password": "Password",
+                  "scan_interval": "Scan interval (seconds)",
+                  "api_key": "API key"
+                },
+                "data_description": {
+                  "host": "Hostname or IP address of your Resol KM2 or DL2/DL3 device or your json-live-data-server. If json-live-data-server runs as Add-on use 127.0.0.1.",
+                  "port": "Port of your Resol KM2 or DL2/DL3. Defaults to 80. If you use KM1, VBus/LAN or VBus/USB with json-live-data-server, the default port is 3333.",
+                  "username": "Username used for logging in to Resol KM2 or DL2/DL3. Not needed for KM1, VBus/LAN or VBus/USB.",
+                  "password": "Password used for logging in to Resol KM2 or DL2/DL3. Not needed for KM1, VBus/LAN or VBus/USB.",
+                  "scan_interval": "Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 60 (1 min).",
+                  "api_key": "Only applicable if you are using DL2/DL3 device. Applies the filter defined on the DL2/DL3. Use the id of the DL2/DL3 defined filter here."
+                }
+              }
+            }
+          }
+        }
+      render: json

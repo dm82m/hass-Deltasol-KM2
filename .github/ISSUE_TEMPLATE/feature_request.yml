@@ -1,0 +1,37 @@
+name: 🌟 Feature Request
+description: Use this template to suggest new features or improvements.
+title: "[FEATURE]: "
+labels: ["enhancement"]
+assignees: ["dm82m"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a feature! Please provide detailed information below.
+
+  - type: textarea
+    id: feature-summary
+    attributes:
+      label: Summary of the Feature Request
+      description: Provide a brief overview of the feature you'd like to see implemented.
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation for the Feature Request
+      description: Explain why this feature is important and how it will benefit users or developers.
+
+  - type: textarea
+    id: implementation-suggestion
+    attributes:
+      label: Suggested Implementation Details (Optional)
+      description: Provide your ideas on how this feature could be implemented, including design considerations or technical details.
+
+  - type: input
+    id: user-type
+    attributes:
+      label: User Type (Optional)
+      description: Specify who would benefit from this feature (e.g., enterprise users, individual users).

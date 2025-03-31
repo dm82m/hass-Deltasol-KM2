@@ -1,0 +1,54 @@
+name: 🐛 Bug Report
+description: Use this template to report a bug.
+title: "[BUG]: "
+labels: ["bug"]
+assignees: ["dm82m"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug! Please fill out the following details to help us resolve the issue.
+
+  - type: checkboxes
+    id: existing-issue-check
+    attributes:
+      label: Is there an existing issue for this bug?
+      description: Please search the repository to check if the issue has already been reported.
+      options:
+        - label: I have searched existing issues.
+          required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Description of the bug
+      description: Describe the bug you encountered and what should have happened.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Provide step-by-step instructions to reproduce the bug.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+
+  - type: input
+    id: version-info
+    attributes:
+      label: Version Information
+      description: Provide the application version, OS, and any other relevant details.
