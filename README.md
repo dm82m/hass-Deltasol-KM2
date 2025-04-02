@@ -2,7 +2,7 @@
 [![downloads_total](https://img.shields.io/github/downloads/dm82m/hass-deltasol-km2/total?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/releases)
 [![downloads_latest](https://img.shields.io/github/downloads/dm82m/hass-deltasol-km2/latest/total?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/releases)
 [![maintained](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2)
-[![license](https://img.shields.io/github/license/dm82m/hass-deltasol-km2.svg?style=for-the-badge)](LICENSE)
+[![license](https://img.shields.io/github/license/dm82m/hass-deltasol-km2.svg?style=for-the-badge)](https://github.com/dm82m/hass-Deltasol-KM2/blob/master/LICENSE)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 [![buy_me_a_coffee](https://img.shields.io/badge/If%20you%20like%20it-Buy%20me%20a%20coffee-yellow.svg?style=for-the-badge)](https://www.buymeacoffee.com/dirkmaucher)
 [![paypal](https://img.shields.io/badge/If%20you%20like%20it-PayPal%20Me-blue.svg?style=for-the-badge)](https://paypal.me/dirkmaucher)
