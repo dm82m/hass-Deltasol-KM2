@@ -33,7 +33,7 @@ async def async_setup_platform(
     async_add_entities: AddEntitiesCallback,
     discovery_info=None,
 ):
-    """Platform setup for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB sensors."""
+    """Platform setup for Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB sensors."""
     # This function can be removed in a future version when migration to config flow completed.
     if (
         not hass.config_entries.async_entries(DOMAIN)

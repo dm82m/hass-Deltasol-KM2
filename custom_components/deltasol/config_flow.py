@@ -1,4 +1,4 @@
-"""Config flow for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB component."""
+"""Config flow for Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB component."""
 
 from __future__ import annotations
 

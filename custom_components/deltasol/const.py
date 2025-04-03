@@ -1,7 +1,7 @@
-"""Constants for the Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB component."""
+"""Constants for the Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB component."""
 
 DOMAIN = "deltasol"
-DEFAULT_NAME = "Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB"
+DEFAULT_NAME = "Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB"
 DEFAULT_TIMEOUT = 60
 
 DEFAULT_SCAN_INTERVAL = 300

@@ -1,6 +1,6 @@
-"""The Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB component.
+"""The Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB component.
 
-Gets sensor data from Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB using api
+Gets sensor data from Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB using api
 Author: dm82m
 https://github.com/dm82m/hass-Deltasol-KM2"""
 
@@ -140,7 +140,7 @@ class DeltasolCoordinator(DataUpdateCoordinator):
         )
 
     async def async_update_data(self):
-        """Fetch data from the Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB."""
+        """Fetch data from the Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB."""
         async with asyncio.timeout(DEFAULT_TIMEOUT):
             try:
                 data = await self.hass.async_add_executor_job(self.api.fetch_data)

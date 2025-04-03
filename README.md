@@ -12,15 +12,15 @@
 
 # hass-Deltasol-KM2
 
-Custom component for retrieving sensor information from Resol KM1/KM2 or DL2/DL3 or VBus/LAN or VBus/USB. This component automatically determines if you are using KM1/KM2 or DL2/DL3 device and can also be set up to work with VBus/LAN or VBus/USB.
+Custom component for retrieving sensor information from Resol KM1/KM2 or DL2/DL2Plus/DL3 or VBus/LAN or VBus/USB. This component automatically determines if you are using KM1/KM2 or DL2/DL2Plus/DL3 device and can also be set up to work with VBus/LAN or VBus/USB.
 Component uses webservice to get all the sensor data and makes it available in [Home Assistant](https://home-assistant.io/).
 
 ## Features
 
 ### Currently Available Features
 
-- :computer: This integration supports all Resol devices: KM1/KM2, DL2/DL3, VBus/LAN and VBus/USB and is capable of auto detecting your device.
-- :star: The exclusive Filter that is only available on DL2/DL3 devices can be used with this integration!
+- :computer: This integration supports all Resol devices: KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN and VBus/USB and is capable of auto detecting your device. Welcome the *DL2Plus* as the newest family member. 
+- :star: The exclusive Filter that is only available on DL2/DL2Plus/DL3 devices can be used with this integration!
 - :tv: This integration is fully configurable within the UI, no `yaml` configuration needed.
 - :link: If the connection to your Resol device gets lost (network issue, Add-on not yet started, ...) the integration makes retries until the connection is established.
 - :large_blue_diamond: All the data of your Resol device is shown in Home Assistant. I.e. Product Name, Serial Number, Product Features, Software Version, Hardware Version, ...
@@ -53,7 +53,7 @@ Component uses webservice to get all the sensor data and makes it available in [
 - [![add_resol](https://img.shields.io/badge/Add%20Integration-Home%20Assistant-blue?style=flat)](https://my.home-assistant.io/redirect/hacs_repository/?owner=dm82m&repository=hass-Deltasol-KM2&category=integration) or go to your HACS store and search for `dm82m/hass-Deltasol-KM2`.
 - Click `Download` in the lower right side and install it.
 - Restart Home Assistant Core.
-- [![configure_resol](https://img.shields.io/badge/Configure%20Integration-Home%20Assistant-blue?style=flat)](https://my.home-assistant.io/redirect/config_flow_start/?domain=deltasol) or configure the integration by adding it via UI `Settings` -> `Devices & Services` -> `Add Integration` -> `Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB`. Then follow the configuration steps below.
+- [![configure_resol](https://img.shields.io/badge/Configure%20Integration-Home%20Assistant-blue?style=flat)](https://my.home-assistant.io/redirect/config_flow_start/?domain=deltasol) or configure the integration by adding it via UI `Settings` -> `Devices & Services` -> `Add Integration` -> `Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB`. Then follow the configuration steps below.
 
 ### Manual install
 
@@ -78,24 +78,24 @@ custom_components
 │       └── nl.json
 ```
 
-Restart Home Assistant Core and afterwards [![configure_resol](https://img.shields.io/badge/Configure%20Integration-Home%20Assistant-blue?style=flat)](https://my.home-assistant.io/redirect/config_flow_start/?domain=deltasol) or configure the integration by adding it via UI `Settings` -> `Devices & Services` -> `Add Integration` -> `Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB`. Then follow the configuration steps below.
+Restart Home Assistant Core and afterwards [![configure_resol](https://img.shields.io/badge/Configure%20Integration-Home%20Assistant-blue?style=flat)](https://my.home-assistant.io/redirect/config_flow_start/?domain=deltasol) or configure the integration by adding it via UI `Settings` -> `Devices & Services` -> `Add Integration` -> `Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB`. Then follow the configuration steps below.
 
 ## Configuration
 
 In any case, try to ensure to have the latest firmware running on your Resol device.
 
-### KM2 and DL2/DL3
+### KM2 and DL2/DL2Plus/DL3
 
 It works out-of-the-box, the only thing that is needed is the configuration described next.
 
 #### Configuration
 
-- `Host`: Hostname or IP address of your Resol KM2 or DL2/DL3.
-- `Port`: Port of your Resol KM2 or DL2/DL3. Defaults to 80. Do not change that, unless you know what you do.
-- `Username`: Username used for logging in to Resol KM2 or DL2/DL3.
-- `Password`: Password used for logging in to Resol KM2 or DL2/DL3.
+- `Host`: Hostname or IP address of your Resol KM2 or DL2/DL2Plus/DL3.
+- `Port`: Port of your Resol KM2 or DL2/DL2Plus/DL3. Defaults to 80. Do not change that, unless you know what you do.
+- `Username`: Username used for logging in to Resol KM2 or DL2/DL2Plus/DL3.
+- `Password`: Password used for logging in to Resol KM2 or DL2/DL2Plus/DL3.
 - `Scan interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 60 (1 min).
-- `API key` (Optional):  Only applicable if you are using DL2/DL3 device. Applies the filter defined on the DL2/DL3. Use the id of the DL2/DL3 defined filter here.
+- `API key` (Optional):  Only applicable if you are using DL2/DL2Plus/DL3 device. Applies the filter defined on the DL2/DL2Plus/DL3. Use the id of the DL2/DL2Plus/DL3 defined filter here.
 
 ### KM1, VBus/LAN and VBus/USB
 

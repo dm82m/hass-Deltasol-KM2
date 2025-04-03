@@ -1,5 +1,5 @@
 """
-Gets sensor data from Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB using api.
+Gets sensor data from Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB using api.
 Author: dm82m
 https://github.com/dm82m/hass-Deltasol-KM2
 """
@@ -22,7 +22,7 @@ DeltasolEndpoint = namedtuple(
 
 
 class DeltasolApi:
-    """Wrapper class for Resol KM1/KM2, DL2/DL3, VBus/LAN, VBus/USB."""
+    """Wrapper class for Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB."""
 
     def __init__(self, username, password, host, port, api_key) -> None:
         """Initialise api."""
@@ -107,7 +107,7 @@ class DeltasolApi:
                     _LOGGER.error(error)
                     raise IntegrationError(error)
             else:
-                error = "Are you sure you entered the correct address of the Resol KM2/DL2/DL3 device? Please re-check and if the issue still persists, please file an issue here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
+                error = "Are you sure you entered the correct address of the Resol KM2/DL2/DL2Plus/DL3 device? Please re-check and if the issue still persists, please file an issue here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
                 _LOGGER.error(error)
                 raise IntegrationError(error)
 
@@ -125,7 +125,7 @@ class DeltasolApi:
             product = self.detect_product()
 
             response = {}
-            if product == "km2":
+            if product == "km2" or product == "dl2plus":
                 response = self.fetch_data_km2()
             elif product == "dl2" or product == "dl3":
                 response = self.fetch_data_dlx()
@@ -148,6 +148,9 @@ class DeltasolApi:
         _LOGGER.debug(f"KM2 requesting sensor data url {url}")
 
         try:
+            if not self.username or not self.password:
+                raise KeyError()
+
             headers = {"Content-Type": "application/json"}
 
             payload = (
