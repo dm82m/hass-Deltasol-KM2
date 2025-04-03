@@ -129,11 +129,11 @@ class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
             else:
-                await self.async_set_unique_id(info.get("title"))
-                self._abort_if_unique_id_mismatch()
                 return self.async_update_reload_and_abort(
                     config,
-                    data_updates=user_input,
+                    unique_id=config.unique_id,
+                    data={**config.data, **user_input},
+                    reason="reconfigure_successful",
                 )
         return self.async_show_form(
             step_id="reconfigure",
