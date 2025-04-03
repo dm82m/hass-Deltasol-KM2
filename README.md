@@ -12,7 +12,7 @@
 
 # hass-Deltasol-KM2
 
-Custom component for retrieving sensor information from Resol KM1/KM2 or DL2/DL2Plus/DL3 or VBus/LAN or VBus/USB. This component automatically determines if you are using KM1/KM2 or DL2/DL2Plus/DL3 device and can also be set up to work with VBus/LAN or VBus/USB.
+Custom component for retrieving sensor information from Resol KM1/KM2 or DL2/DL2Plus/DL3 or VBus/LAN or VBus/USB. This component automatically determines if you are using KM2 or DL2/DL2Plus/DL3 device and can also be set up to work with KM1, VBus/LAN or VBus/USB.
 Component uses webservice to get all the sensor data and makes it available in [Home Assistant](https://home-assistant.io/).
 
 ## Features
@@ -26,7 +26,7 @@ Component uses webservice to get all the sensor data and makes it available in [
 - :large_blue_diamond: All the data of your Resol device is shown in Home Assistant. I.e. Product Name, Serial Number, Product Features, Software Version, Hardware Version, ...
 - :small_blue_diamond: All bus devices that are connected to your Resol device are shown as device in Home Assistant with the specific bus device name. Additionally all the sensors are grouped by these bus devices to make it easier to find your desired sensors.
 - :small_orange_diamond: By default all sensors without a unit are handled as diagnostic sensors and disabled by default. You can manually enable them if needed.
-- :earth_africa: Multiple language support, currenty we have :uk:, :de:, :it: and :netherlands:. If you speak another language, just directly open a PR or create an [Translation Request](https://github.com/dm82m/hass-Deltasol-KM2/issues/new?template=translation_request.yml) for your language and provide the translation there.
+- :earth_africa: Multiple language support, currently we have :uk:, :de:, :it: and :netherlands:. If you speak another language, just directly open a PR or create an [Translation Request](https://github.com/dm82m/hass-Deltasol-KM2/issues/new?template=translation_request.yml) for your language and provide the translation there.
 
 ### Next To Come Features (Wishlist)
 
@@ -110,7 +110,7 @@ If your json-live-data-server is successfully running, lets continue here.
 - `Host`: If you went with point 1 it is `127.0.0.1` and if you went with point 2 it is `hostname_or_ip_of_your_json-live-data-server`.
 - `Port`: Within default `json-live-data-server` it is port `3333`. If you have changed that, you need to use this port here aswell. Otherweise set it to `3333`.
 - `Scan interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 60 (1 min).
-- Do not set `Username`, `Password` or `API key` key here, they are not needed.
+- Do not set `Username`, `Password` or `API key` here, they are not needed.
 
 ## Troubleshooting
 Please set your logging for this custom component to debug during initial setup phase. If everything works well, you are safe to remove the debug logging:
