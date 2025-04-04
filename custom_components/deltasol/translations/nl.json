@@ -24,7 +24,7 @@
           "username": "Gebruikersnaam voor het aanmelden bij Resol KM2 of DL2/DL2Plus/DL3. Niet vereist voor KM1, VBus/LAN of VBus/USB.",
           "password": "Wachtwoord voor het aanmelden bij Resol KM2 of DL2/DL2Plus/DL3. Niet vereist voor KM1, VBus/LAN of VBus/USB.",
           "scan_interval": "Bepaalt de updatefrequentie. Optioneel en in seconden. De standaardwaarde is 300 (5 min), de minimumwaarde is 60 (1 min).",
-          "api_key": "Alleen van toepassing als je een DL2/DL2Plus/DL3-apparaat gebruikt. Hiermee wordt de sleutel toegepast die is gedefinieerd op de DL2/DL2Plus/DL3. Gebruik hier de ID van de DL2/DL2Plus/DL3 gedefinieerde sleutel."
+          "api_key": "Alleen van toepassing als je een DL2/DL3-apparaat gebruikt. Hiermee wordt de sleutel toegepast die is gedefinieerd op de DL2/DL3. Gebruik hier de ID van de DL2/DL3 gedefinieerde sleutel."
         }
       },
       "reconfigure": {
@@ -42,7 +42,7 @@
           "username": "Gebruikersnaam voor het aanmelden bij Resol KM2 of DL2/DL2Plus/DL3. Niet vereist voor KM1, VBus/LAN of VBus/USB.",
           "password": "Wachtwoord voor het aanmelden bij Resol KM2 of DL2/DL2Plus/DL3. Niet vereist voor KM1, VBus/LAN of VBus/USB.",
           "scan_interval": "Bepaalt de updatefrequentie. Optioneel en in seconden. De standaardwaarde is 300 (5 min), de minimumwaarde is 60 (1 min).",
-          "api_key": "Alleen van toepassing als je een DL2/DL2Plus/DL3-apparaat gebruikt. Hiermee wordt de sleutel toegepast die is gedefinieerd op de DL2/DL2Plus/DL3. Gebruik hier de ID van de DL2/DL2Plus/DL3 gedefinieerde sleutel."
+          "api_key": "Alleen van toepassing als je een DL2/DL3-apparaat gebruikt. Hiermee wordt de sleutel toegepast die is gedefinieerd op de DL2/DL3. Gebruik hier de ID van de DL2/DL3 gedefinieerde sleutel."
         }
       }
     }

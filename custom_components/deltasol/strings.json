@@ -24,7 +24,7 @@
           "username": "Username used for logging in to Resol KM2 or DL2/DL2Plus/DL3. Not needed for KM1, VBus/LAN or VBus/USB.",
           "password": "Password used for logging in to Resol KM2 or DL2/DL2Plus/DL3. Not needed for KM1, VBus/LAN or VBus/USB.",
           "scan_interval": "Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 60 (1 min).",
-          "api_key": "Only applicable if you are using DL2/DL2Plus/DL3 device. Applies the filter defined on the DL2/DL2Plus/DL3. Use the id of the DL2/DL2Plus/DL3 defined filter here."
+          "api_key": "Only applicable if you are using DL2/DL3 device. Applies the filter defined on the DL2/DL3. Use the id of the DL2/DL3 defined filter here."
         }
       },
       "reconfigure": {
@@ -42,7 +42,7 @@
           "username": "Username used for logging in to Resol KM2 or DL2/DL2Plus/DL3. Not needed for KM1, VBus/LAN or VBus/USB.",
           "password": "Password used for logging in to Resol KM2 or DL2/DL2Plus/DL3. Not needed for KM1, VBus/LAN or VBus/USB.",
           "scan_interval": "Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 60 (1 min).",
-          "api_key": "Only applicable if you are using DL2/DL2Plus/DL3 device. Applies the filter defined on the DL2/DL2Plus/DL3. Use the id of the DL2/DL2Plus/DL3 defined filter here."
+          "api_key": "Only applicable if you are using DL2/DL3 device. Applies the filter defined on the DL2/DL3. Use the id of the DL2/DL3 defined filter here."
         }
       }
     }

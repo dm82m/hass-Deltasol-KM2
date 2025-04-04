@@ -20,7 +20,7 @@ Component uses webservice to get all the sensor data and makes it available in [
 ### Currently Available Features
 
 - :computer: This integration supports all Resol devices: KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN and VBus/USB and is capable of auto detecting your device. Welcome the *DL2Plus* as the newest family member. 
-- :star: The exclusive Filter that is only available on DL2/DL2Plus/DL3 devices can be used with this integration!
+- :star: The exclusive Filter that is only available on DL2/DL3 devices can be used with this integration!
 - :tv: This integration is fully configurable within the UI, no `yaml` configuration needed.
 - :link: If the connection to your Resol device gets lost (network issue, Add-on not yet started, ...) the integration makes retries until the connection is established.
 - :large_blue_diamond: All the data of your Resol device is shown in Home Assistant. I.e. Product Name, Serial Number, Product Features, Software Version, Hardware Version, ...
@@ -95,7 +95,7 @@ It works out-of-the-box, the only thing that is needed is the configuration desc
 - `Username`: Username used for logging in to Resol KM2 or DL2/DL2Plus/DL3.
 - `Password`: Password used for logging in to Resol KM2 or DL2/DL2Plus/DL3.
 - `Scan interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 60 (1 min).
-- `API key` (Optional):  Only applicable if you are using DL2/DL2Plus/DL3 device. Applies the filter defined on the DL2/DL2Plus/DL3. Use the id of the DL2/DL2Plus/DL3 defined filter here.
+- `API key` (Optional):  Only applicable if you are using DL2/DL3 device. Applies the filter defined on the DL2/DL3. Use the id of the DL2/DL3 defined filter here.
 
 ### KM1, VBus/LAN and VBus/USB
 
