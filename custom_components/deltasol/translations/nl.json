@@ -6,28 +6,52 @@
     },
     "error": {
       "cannot_connect": "Verbinding kon niet tot stand worden gebracht",
+      "invalid_auth": "!!!Ongeldige authenticatie",
       "unknown": "Onverwachte fout"
     },
     "step": {
       "user": {
+        "description": "!!!Geef het adres van uw Resol-apparaat op:",
         "data": {
           "host": "Host",
-          "port": "Poort",
+          "port": "Poort"
+        },
+        "data_description": {
+          "host": "!!!Hostnaam of IP-adres van uw Resol KM2 of DL2/DL2Plus/DL3-apparaat of uw json-live-data-server (KM1, VBus/LAN oder VBus/USB). Als json-live-data-server als add-on wordt uitgevoerd, gebruikt u '127.0.0.1'.",
+          "port": "!!!Poort van uw Resol KM2 of DL2/DL2Plus/DL3. Standaard is dit '80'. Gebruikt u een json-live-data-server (KM1, VBus/LAN of VBus/USB), dan is de standaard poort '3333'."
+        }
+      },
+      "auth": {
+        "description": "!!!Uw Resol-apparaat heeft inloggegevens nodig voor authenticatie:",
+        "data": {
           "username": "Gebruikersnaam",
-          "password": "Wachtwoord",
-          "scan_interval": "Verversingsinterval (seconden)",
+          "password": "Wachtwoord"
+        },
+        "data_description": {
+          "username": "!!!Gebruikersnaam voor het aanmelden bij Resol apparaat. Standaard is 'admin'.",
+          "password": "!!!Wachtwoord voor het aanmelden bij Resol apparaat."
+        }
+      },
+      "dl23options": {
+        "description": "!!!Speciale configuratie voor uw Resol DL2/DL3-apparaat:",
+        "data": {
           "api_key": "API sleutel"
         },
         "data_description": {
-          "host": "Hostnaam of IP-adres van uw Resol KM2 of DL2/DL2Plus/DL3-apparaat of uw json-live-data server. Als json-live-data-server als add-on wordt uitgevoerd, gebruikt u 127.0.0.1.",
-          "port": "Poort van uw Resol KM2 of DL2/DL2Plus/DL3. Standaard is dit 80. Gebruikt u een KM1, VBus/LAN of VBus/USB met de json-live-data-server, dan is de standaard poort 3333.",
-          "username": "Gebruikersnaam voor het aanmelden bij Resol KM2 of DL2/DL2Plus/DL3. Niet vereist voor KM1, VBus/LAN of VBus/USB.",
-          "password": "Wachtwoord voor het aanmelden bij Resol KM2 of DL2/DL2Plus/DL3. Niet vereist voor KM1, VBus/LAN of VBus/USB.",
-          "scan_interval": "Bepaalt de updatefrequentie. Optioneel en in seconden. De standaardwaarde is 300 (5 min), de minimumwaarde is 60 (1 min).",
-          "api_key": "Alleen van toepassing als je een DL2/DL3-apparaat gebruikt. Hiermee wordt de sleutel toegepast die is gedefinieerd op de DL2/DL3. Gebruik hier de ID van de DL2/DL3 gedefinieerde sleutel."
+          "api_key": "!!!Hiermee wordt de sleutel toegepast die is gedefinieerd op de DL2/DL3. Gebruik hier de ID van de DL2/DL3 gedefinieerde sleutel."
+        }
+      },
+      "options": {
+        "description": "!!!Configuratie van uw Resol-apparaat:",
+        "data": {
+          "scan_interval": "Verversingsinterval (seconden)"
+        },
+        "data_description": {
+          "scan_interval": "Bepaalt de updatefrequentie. Optioneel en in seconden. De standaardwaarde is '300' (5 min), de minimumwaarde is '60' (1 min)."
         }
       },
       "reconfigure": {
+        "description": "!!!Herconfigureer alle bestaande instellingen voor uw Resol-apparaat:",
         "data": {
           "host": "Host",
           "port": "Poort",
@@ -37,11 +61,11 @@
           "api_key": "API sleutel"
         },
         "data_description": {
-          "host": "Hostnaam of IP-adres van uw Resol KM2 of DL2/DL2Plus/DL3-apparaat of uw json-live-data server. Als json-live-data-server als add-on wordt uitgevoerd, gebruikt u 127.0.0.1.",
-          "port": "Poort van uw Resol KM2 of DL2/DL2Plus/DL3. Standaard is dit 80. Gebruikt u een KM1, VBus/LAN of VBus/USB met de json-live-data-server, dan is de standaard poort 3333.",
-          "username": "Gebruikersnaam voor het aanmelden bij Resol KM2 of DL2/DL2Plus/DL3. Niet vereist voor KM1, VBus/LAN of VBus/USB.",
-          "password": "Wachtwoord voor het aanmelden bij Resol KM2 of DL2/DL2Plus/DL3. Niet vereist voor KM1, VBus/LAN of VBus/USB.",
-          "scan_interval": "Bepaalt de updatefrequentie. Optioneel en in seconden. De standaardwaarde is 300 (5 min), de minimumwaarde is 60 (1 min).",
+          "host": "!!!Hostnaam of IP-adres van uw Resol KM2 of DL2/DL2Plus/DL3-apparaat of uw json-live-data-server (KM1, VBus/LAN oder VBus/USB). Als json-live-data-server als add-on wordt uitgevoerd, gebruikt u '127.0.0.1'.",
+          "port": "!!!Poort van uw Resol KM2 of DL2/DL2Plus/DL3. Standaard is dit 80. Gebruikt u een json-live-data-server (KM1, VBus/LAN of VBus/USB), dan is de standaard poort '3333'.",
+          "username": "!!!Gebruikersnaam voor het aanmelden bij Resol KM2 of DL2/DL2Plus/DL3. Standaard is 'admin'. Niet vereist voor json-live-data-server (KM1, VBus/LAN of VBus/USB).",
+          "password": "!!!Wachtwoord voor het aanmelden bij Resol KM2 of DL2/DL2Plus/DL3. Niet vereist voor json-live-data-server (KM1, VBus/LAN of VBus/USB).",
+          "scan_interval": "Bepaalt de updatefrequentie. Optioneel en in seconden. De standaardwaarde is '300' (5 min), de minimumwaarde is '60' (1 min).",
           "api_key": "Alleen van toepassing als je een DL2/DL3-apparaat gebruikt. Hiermee wordt de sleutel toegepast die is gedefinieerd op de DL2/DL3. Gebruik hier de ID van de DL2/DL3 gedefinieerde sleutel."
         }
       }

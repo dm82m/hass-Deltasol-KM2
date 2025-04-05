@@ -6,28 +6,52 @@
     },
     "error": {
       "cannot_connect": "Verbindung konnte nicht hergestellt werden",
+      "invalid_auth": "User oder Passwort falsch",
       "unknown": "Unerwarteter Fehler"
     },
     "step": {
       "user": {
+        "description": "Bitte gib die Adresse zu deinem Resol Geräts ein:",
         "data": {
           "host": "Host",
-          "port": "Port",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "Hostname oder IP-Adresse deines Resol KM2 oder DL2/DL2Plus/DL3 Geräts oder deines json-live-data-servers (KM1, VBus/LAN oder VBus/USB). Wenn json-live-data-server als Add-on läuft, verwende '127.0.0.1'.",
+          "port": "Port deines Resol KM2 oder DL2/DL2Plus/DL3. Standard ist '80'. Wenn du einen json-live-data-server (KM1, VBus/LAN oder VBus/USB) verwendest, ist der Standardport '3333'."
+        }
+      },
+      "auth": {
+        "description": "Dein Resol Gerät benötigt Anmeldedaten zur Authentifizierung:",
+        "data": {
           "username": "Benutzername",
-          "password": "Passwort",
-          "scan_interval": "Aktualisierungsintervall (Sekunden)",
+          "password": "Passwort"
+        },
+        "data_description": {
+          "username": "Benutzername für die Anmeldung bei deinem Resol Gerät. Standard ist 'admin'.",
+          "password": "Passwort für die Anmeldung bei Resol bei deinem Resol Gerät."
+        }
+      },
+      "dl23options": {
+        "description": "Spezialkonfiguration für dein Resol DL2/DL3 Gerätes:",
+        "data": {
           "api_key": "API Filter"
         },
         "data_description": {
-          "host": "Hostname oder IP-Adresse deines Resol KM2 oder DL2/DL2Plus/DL3 Geräts oder deines json-live-data-servers. Wenn json-live-data-server als Add-on läuft, verwende 127.0.0.1.",
-          "port": "Port deines Resol KM2 oder DL2/DL2Plus/DL3. Standard ist 80. Wenn du einen KM1, VBus/LAN oder VBus/USB mit dem json-live-data-server verwendest, ist der Standardport 3333.",
-          "username": "Benutzername für die Anmeldung bei Resol KM2 oder DL2/DL2Plus/DL3. Nicht erforderlich für KM1, VBus/LAN oder VBus/USB.",
-          "password": "Passwort für die Anmeldung bei Resol KM2 oder DL2/DL2Plus/DL3. Nicht erforderlich für KM1, VBus/LAN oder VBus/USB.",
-          "scan_interval": "Definiert die Aktualisierungshäufigkeit. Optional und in Sekunden. Standard ist 300 (5 min), der Mindestwert beträgt 60 (1 min).",
-          "api_key": "Nur anwendbar, wenn du ein DL2/DL3-Gerät verwendest. Wendet den auf dem DL2/DL3 definierten Filter an. Verwende hier die ID des DL2/DL3 definierten Filters."
+          "api_key": "Wendet den auf dem DL2/DL3 definierten Filter an. Verwende hier die ID des auf dem Resol DL2/DL3 definierten Filters."
+        }
+      },
+      "options": {
+        "description": "Konfiguration deines Resol Gerätes:",
+        "data": {
+          "scan_interval": "Aktualisierungsintervall (Sekunden)"
+        },
+        "data_description": {
+          "scan_interval": "Definiert die Aktualisierungshäufigkeit. Optional und in Sekunden. Standard ist '300' (5 min), der Mindestwert beträgt '60' (1 min)."
         }
       },
       "reconfigure": {
+        "description": "Neukonfiguration aller vorhandenen Einstellungen für dein Resol Gerät anpassen:",
         "data": {
           "host": "Host",
           "port": "Port",
@@ -37,11 +61,11 @@
           "api_key": "API Filter"
         },
         "data_description": {
-          "host": "Hostname oder IP-Adresse deines Resol KM2 oder DL2/DL2Plus/DL3 Geräts oder deines json-live-data-servers. Wenn json-live-data-server als Add-on läuft, verwende 127.0.0.1.",
-          "port": "Port deines Resol KM2 oder DL2/DL2Plus/DL3. Standard ist 80. Wenn du einen KM1, VBus/LAN oder VBus/USB mit dem json-live-data-server verwendest, ist der Standardport 3333.",
-          "username": "Benutzername für die Anmeldung bei Resol KM2 oder DL2/DL2Plus/DL3. Nicht erforderlich für KM1, VBus/LAN oder VBus/USB.",
-          "password": "Passwort für die Anmeldung bei Resol KM2 oder DL2/DL2Plus/DL3. Nicht erforderlich für KM1, VBus/LAN oder VBus/USB.",
-          "scan_interval": "Definiert die Aktualisierungshäufigkeit. Optional und in Sekunden. Standard ist 300 (5 min), der Mindestwert beträgt 60 (1 min).",
+          "host": "Hostname oder IP-Adresse deines Resol KM2 oder DL2/DL2Plus/DL3 Geräts oder deines json-live-data-servers (KM1, VBus/LAN oder VBus/USB). Wenn json-live-data-server als Add-on läuft, verwende '127.0.0.1'.",
+          "port": "Port deines Resol KM2 oder DL2/DL2Plus/DL3. Standard ist '80'. Wenn du einen json-live-data-server (KM1, VBus/LAN oder VBus/USB) verwendest, ist der Standardport '3333'.",
+          "username": "Benutzername für die Anmeldung bei Resol KM2 oder DL2/DL2Plus/DL3. Standard ist 'admin'. Nicht erforderlich für json-live-data-server (KM1, VBus/LAN oder VBus/USB).",
+          "password": "Passwort für die Anmeldung bei Resol KM2 oder DL2/DL2Plus/DL3. Nicht erforderlich für json-live-data-server (KM1, VBus/LAN oder VBus/USB).",
+          "scan_interval": "Definiert die Aktualisierungshäufigkeit. Optional und in Sekunden. Standard ist '300' (5 min), der Mindestwert beträgt '60' (1 min).",
           "api_key": "Nur anwendbar, wenn du ein DL2/DL3-Gerät verwendest. Wendet den auf dem DL2/DL3 definierten Filter an. Verwende hier die ID des DL2/DL3 definierten Filters."
         }
       }
