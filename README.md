@@ -19,18 +19,18 @@ Component uses webservice to get all the sensor data and makes it available in [
 
 ### Currently Available Features
 
-- :computer: This integration supports all Resol devices: KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN and VBus/USB and is capable of auto detecting your device. Welcome the *DL2Plus* as the newest family member. 
-- :star: The exclusive Filter that is only available on DL2/DL3 devices can be used with this integration!
-- :tv: This integration is fully configurable within the UI, no `yaml` configuration needed.
+- :computer: This integration supports all Resol devices: KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN and VBus/USB. Welcome the *DL2Plus* as the newest family member.
+- :tv: This integration is fully configurable within the UI, no `yaml` configuration needed. *It now even guides you through the whole setup process and only asks you for the options that are really needed for your specific device. And we even have the possibility to re-configure your device and change all options you made before.*
+- :star: The exclusive filter that is only available on DL2/DL3 devices can be used with this integration!
 - :link: If the connection to your Resol device gets lost (network issue, Add-on not yet started, ...) the integration makes retries until the connection is established.
-- :large_blue_diamond: All the data of your Resol device is shown in Home Assistant. I.e. Product Name, Serial Number, Product Features, Software Version, Hardware Version, ...
+- :large_blue_diamond: All the data of your Resol device is shown in Home Assistant. I.e. Product Name, Serial Number, Product Features, Software Version, Hardware Version, MAC Address, ...
 - :small_blue_diamond: All bus devices that are connected to your Resol device are shown as device in Home Assistant with the specific bus device name. Additionally all the sensors are grouped by these bus devices to make it easier to find your desired sensors.
 - :small_orange_diamond: By default all sensors without a unit are handled as diagnostic sensors and disabled by default. You can manually enable them if needed.
 - :earth_africa: Multiple language support, currently we have :uk:, :de:, :it: and :netherlands:. If you speak another language, just directly open a PR or create an [Translation Request](https://github.com/dm82m/hass-Deltasol-KM2/issues/new?template=translation_request.yml) for your language and provide the translation there.
 
 ### Next To Come Features (Wishlist)
 
-- :arrows_counterclockwise: Better UI Configuration Flow with device detection and only showing the options that are relevant for the specific device.
+- :arrows_counterclockwise: Reuse config_flow process for reconfigure flow. Very low prio as it is not a highly needed usecase.
 - ... more ideas? Feel free to open an [Feature Request](https://github.com/dm82m/hass-Deltasol-KM2/issues/new?template=feature_request.yml).
 
 ### Bugs

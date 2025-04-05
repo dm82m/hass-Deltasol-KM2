@@ -24,7 +24,7 @@ DeltasolEndpoint = namedtuple(
 class DeltasolApi:
     """Wrapper class for Resol KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN, VBus/USB."""
 
-    def __init__(self, username, password, host, port, api_key) -> None:
+    def __init__(self, host, port, username=None, password=None, api_key=None) -> None:
         """Initialise api."""
         self.data = None
         self.host = host

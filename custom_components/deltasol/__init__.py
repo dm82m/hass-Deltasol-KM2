@@ -119,11 +119,11 @@ class DeltasolCoordinator(DataUpdateCoordinator):
         """Initialize coordinator."""
         self.hass = hass
         self.api = DeltasolApi(
-            config.data.get(CONF_USERNAME),
-            config.data.get(CONF_PASSWORD),
-            config.data.get(CONF_HOST),
-            config.data.get(CONF_PORT),
-            config.data.get(CONF_API_KEY),
+            host=config.data.get(CONF_HOST),
+            port=config.data.get(CONF_PORT),
+            username=config.data.get(CONF_USERNAME),
+            password=config.data.get(CONF_PASSWORD),
+            api_key=config.data.get(CONF_API_KEY),
         )
         super().__init__(
             hass,

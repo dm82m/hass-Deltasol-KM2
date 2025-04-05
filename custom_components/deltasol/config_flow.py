@@ -24,6 +24,7 @@ from .const import (
     DEFAULT_NAME,
     DEFAULT_PORT,
     DEFAULT_SCAN_INTERVAL,
+    DEFAULT_USERNAME,
     DOMAIN,
     MIN_SCAN_INTERVAL,
 )
@@ -32,64 +33,89 @@ from .deltasolapi import DeltasolApi
 _LOGGER = logging.getLogger(__name__)
 
 
-CONFIG_DATA_SCHEMA = vol.Schema(
+STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_HOST): cv.string,
         vol.Required(CONF_PORT, default=DEFAULT_PORT): cv.port,
-        vol.Optional(CONF_USERNAME): cv.string,
-        vol.Optional(CONF_PASSWORD): cv.string,
+    }
+)
+
+STEP_AUTH_DATA_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_USERNAME, default=DEFAULT_USERNAME): cv.string,
+        vol.Required(CONF_PASSWORD): cv.string,
+    }
+)
+
+STEP_OPTIONS_DATA_SCHEMA = vol.Schema(
+    {
         vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.All(
             vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)
         ),
+    }
+)
+
+STEP_DL23OPTIONS_DATA_SCHEMA = STEP_OPTIONS_DATA_SCHEMA.extend(
+    {
         vol.Optional(CONF_API_KEY): cv.string,
     }
 )
 
 
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
-    """Validate the user input allows us to connect.
-
-    Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
-    """
+    """Validate the user input allows us to connect."""
 
     api = DeltasolApi(
-        data.get(CONF_USERNAME),
-        data.get(CONF_PASSWORD),
-        data.get(CONF_HOST),
-        data.get(CONF_PORT),
-        data.get(CONF_API_KEY),
+        host=data.get(CONF_HOST),
+        port=data.get(CONF_PORT),
     )
 
     try:
         await hass.async_add_executor_job(api.detect_product)
-        # If you cannot connect, raise CannotConnect
-        # If the authentication is wrong, raise InvalidAuth
     except IntegrationError as err:
         raise CannotConnect from err
 
     return {
-        "title": f"{api.product_details["name"]}@{data.get(CONF_HOST)}:{data.get(CONF_PORT)}"
+        "title": f"{api.product_details["name"]}@{data.get(CONF_HOST)}:{data.get(CONF_PORT)}",
+        "product": {api.product},
     }
 
 
+async def validate_auth(hass: HomeAssistant, data: dict[str, Any]) -> bool:
+    """Validates the authentication to the Resol device."""
+
+    api = DeltasolApi(
+        host=data.get(CONF_HOST),
+        port=data.get(CONF_PORT),
+        username=data.get(CONF_USERNAME, None),
+        password=data.get(CONF_PASSWORD, None),
+    )
+
+    try:
+        await hass.async_add_executor_job(api.fetch_data)
+    except IntegrationError as err:
+        raise InvalidAuth from err
+
+    return True
+
+
 class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Resol Integration."""
+    """Handle a config flow for Resol integration."""
 
     VERSION = 1
+    _title: str
+    _product: str
     _input_data: dict[str, Any]
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Handle the initial step."""
-        # Called when you initiate adding an integration via the UI
+
         errors: dict[str, str] = {}
 
         if user_input is not None:
-            # The form has been filled in and submitted, so process the data provided.
             try:
-                # Validate that the setup data is valid and if not handle errors.
-                # The errors["base"] values match the values in your strings.json and translation files.
                 info = await validate_input(self.hass, user_input)
             except CannotConnect:
                 errors["base"] = "cannot_connect"
@@ -98,33 +124,101 @@ class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors["base"] = "unknown"
 
             if "base" not in errors:
-                # Validation was successful, so create a unique id for this instance of your integration
-                # and create the config entry.
                 await self.async_set_unique_id(info.get("title"))
                 self._abort_if_unique_id_configured()
-                return self.async_create_entry(title=info["title"], data=user_input)
 
-        # Show initial form.
+                self._title = info["title"]
+                self._product = info["product"]
+                self._input_data = user_input
+                try:
+                    await validate_auth(self.hass, user_input)
+                except InvalidAuth:
+                    return await self.async_step_auth()
+
+                return await self.async_step_options()
+
         return self.async_show_form(
-            step_id="user", data_schema=CONFIG_DATA_SCHEMA, errors=errors
+            step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
+        )
+
+    async def async_step_auth(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Handle the auth step, if auth is needed."""
+
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            user_input.update(self._input_data)
+
+            try:
+                await validate_auth(self.hass, user_input)
+            except InvalidAuth:
+                errors["base"] = "invalid_auth"
+            except Exception:  # pylint: disable=broad-except
+                _LOGGER.exception("Unexpected exception")
+                errors["base"] = "unknown"
+
+            if "base" not in errors:
+                self._input_data.update(user_input)
+
+                if self._product in ["dl2", "dl3"]:
+                    return await self.async_step_dl23options()
+                else:
+                    return await self.async_step_options()
+
+        return self.async_show_form(
+            step_id="auth",
+            data_schema=STEP_AUTH_DATA_SCHEMA,
+            errors=errors,
+        )
+
+    async def async_step_options(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Handle the final options step."""
+
+        if user_input is not None:
+            self._input_data.update(user_input)
+            return self.async_create_entry(title=self._title, data=self._input_data)
+
+        return self.async_show_form(
+            step_id="options",
+            data_schema=STEP_OPTIONS_DATA_SCHEMA,
+            last_step=True,
+        )
+
+    async def async_step_dl23options(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Handle the final DL2/DL3 options step."""
+
+        if user_input is not None:
+            self._input_data.update(user_input)
+            return self.async_create_entry(title=self._title, data=self._input_data)
+
+        return self.async_show_form(
+            step_id="dl23options",
+            data_schema=STEP_DL23OPTIONS_DATA_SCHEMA,
+            last_step=True,
         )
 
     async def async_step_reconfigure(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Add reconfigure step to allow to reconfigure a config entry."""
-        # This method displays a reconfigure option in the integration and is
-        # different to options.
-        # It can be used to reconfigure any of the data submitted when first installed.
-        # This is optional and can be removed if you do not want to allow reconfiguration.
+
         errors: dict[str, str] = {}
         config = self._get_reconfigure_entry()
 
         if user_input is not None:
             try:
                 info = await validate_input(self.hass, user_input)
+                await validate_auth(self.hass, user_input)
             except CannotConnect:
                 errors["base"] = "cannot_connect"
+            except InvalidAuth:
+                errors["base"] = "invalid_auth"
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
@@ -174,7 +268,6 @@ class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
         step so that the user can continue the config flow.
         """
         # This function can be removed in a future version when migration to config flow completed.
-        errors = {}
         user_input = {}
         _LOGGER.warning(
             "Importing old configuration of 'configuration.yaml': %s", import_data
@@ -209,15 +302,15 @@ class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
 
         try:
             info = await validate_input(self.hass, user_input)
+            await validate_auth(self.hass, user_input)
             await self.async_set_unique_id(info.get("title"))
             self._abort_if_unique_id_configured()
-            return await self.async_step_user(user_input=user_input)
-            # return self.async_create_entry(title=info["title"], data=user_input)
-        except CannotConnect:
+            return self.async_create_entry(title=info.get("title"), data=user_input)
+        except (CannotConnect, InvalidAuth):
             _LOGGER.debug(
-                "Error connecting to Deltasol using configuration found for import, delegating to user step"
+                "Error connecting to Resol using configuration found for import, delegating to user step"
             )
-            errors["base"] = "cannot_connect"
+            return await self.async_step_user(user_input=user_input)
 
 
 class CannotConnect(HomeAssistantError):
