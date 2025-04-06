@@ -99,6 +99,9 @@ class DeltasolApi:
                         "features": re.search(
                             r'features\s=\s["](.*?)["]', response.text
                         ).group(1),
+                        "mac": self.transform_to_mac(
+                            re.search(r'serial\s=\s["](.*?)["]', response.text).group(1)
+                        ),
                     }
                     self.product_details = product_details
                     _LOGGER.debug(f"Product Details: {product_details}")
@@ -212,3 +215,7 @@ class DeltasolApi:
 
         _LOGGER.debug(f"DLX response: {response}")
         return response
+
+    def transform_to_mac(self, serial: str) -> str:
+        """Transform a string to MAC address format with ':' every 2 characters."""
+        return ":".join(serial[i : i + 2] for i in range(0, len(serial), 2))
