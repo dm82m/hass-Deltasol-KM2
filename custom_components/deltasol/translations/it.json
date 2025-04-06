@@ -6,43 +6,43 @@
     },
     "error": {
       "cannot_connect": "Impossibile connettersi",
-      "invalid_auth": "!!!Autenticazione non valida",
+      "invalid_auth": "Autenticazione fallita",
       "unknown": "Errore inaspettato"
     },
     "step": {
       "user": {
-        "description": "!!!Per favore inserisci l'indirizzo del tuo dispositivo Resol:",
+        "description": "Inserisci l'indirizzo del tuo dispositivo Resol:",
         "data": {
           "host": "Host",
           "port": "Porta"
         },
         "data_description": {
-          "host": "!!!Hostname o IP del tuo Resol KM2 o DL2/DL2Plus/DL3 device o del tuo json-live-data-server. Se json-live-data-server gira come Add-on usa '127.0.0.1'.",
-          "port": "!!!Porta del tuo Resol KM2 o DL2/DL2Plus/DL3. Default è '80'. Se usi KM1, VBus/LAN o VBus/USB con json-live-data-server, la porta di default è la '3333'."
+          "host": "Hostname o IP del Resol KM2, del DL2/DL2Plus/DL3 o del json-live-data-server. Se json-live-data-server gira come Add-on usa '127.0.0.1'.",
+          "port": "Porta del Resol KM2 o DL2/DL2Plus/DL3. Il default è '80'. Se usi KM1, VBus/LAN o VBus/USB con json-live-data-server, la porta di default è la '3333'."
         }
       },
       "auth": {
-        "description": "!!!Il tuo dispositivo Resol richiede le credenziali per l'autenticazione:",
+        "description": "Il dispositivo Resol richiede le credenziali per l'autenticazione:",
         "data": {
           "username": "Username",
           "password": "Password"
         },
         "data_description": {
-          "username": "!!!Nome utente utilizzato per accedere al dispositivo. Lo standard è 'admin'.",
-          "password": "!!!Password utilizzata per accedere al tuo dispositivo."
+          "username": "Nome utente utilizzato per accedere al dispositivo. Il default è 'admin'.",
+          "password": "Password utilizzata per accedere al dispositivo."
         }
       },
       "dl23options": {
-        "description": "!!!Configurazione speciale per il tuo dispositivo Resol DL2/DL3:",
+        "description": "Configurazione speciale del dispositivo Resol DL2/DL3:",
         "data": {
           "api_key": "API key"
         },
         "data_description": {
-          "api_key": "!!!Applica il filtro definito su DL2/DL3. Usa l'id del filtro per DL2/DL3."
+          "api_key": "Applica il filtro configurato su DL2/DL3 usando l'id del filtro già definito sul dispositivo."
         }
       },
       "options": {
-        "description": "!!!Configurazione del tuo dispositivo Resol:",
+        "description": "Configurazione del dispositivo Resol:",
         "data": {
           "scan_interval": "Intervallo scansione (secondi)"
         },
@@ -51,7 +51,7 @@
         }
       },
       "reconfigure": {
-        "description": "!!!Riconfigurazione di tutte le impostazioni esistenti per il tuo dispositivo Resol:",
+        "description": "Riconfigurazione di tutte le impostazioni esistenti per il dispositivo Resol:",
         "data": {
           "host": "Host",
           "port": "Porta",
@@ -61,12 +61,12 @@
           "api_key": "API key"
         },
         "data_description": {
-          "host": "!!!Hostname o IP del tuo Resol KM2 o DL2/DL2Plus/DL3 device o del tuo json-live-data-server. Se json-live-data-server gira come Add-on usa '127.0.0.1'.",
-          "port": "!!!Porta del tuo Resol KM2 o DL2/DL2Plus/DL3. Default è '80'. Se usi KM1, VBus/LAN o VBus/USB con json-live-data-server, la porta di default è la '3333'.",
-          "username": "!!!Nome utente utilizzato per accedere al dispositivo Resol KM2 o DL2/DL2Plus/DL3. Lo standard è 'admin'. Non necessario per json-live-data-server (KM1, VBus/LAN o VBus/USB).",
-          "password": "!!!Password usata per loggarsi nella periferica Resol KM2 or DL2/DL2Plus/DL3. Non necessario per json-live-data-server (KM1, VBus/LAN or VBus/USB).",
+          "host": "Hostname o IP del Resol KM2, DL2/DL2Plus/DL3 o del json-live-data-server. Se json-live-data-server gira come Add-on usa '127.0.0.1'.",
+          "port": "Porta del Resol KM2 o DL2/DL2Plus/DL3. Il default è '80'. Se usi KM1, VBus/LAN o VBus/USB con json-live-data-server la porta di default è la '3333'.",
+          "username": "Nome utente per accedere al dispositivo. Il default è 'admin'. Non necessario per json-live-data-server (KM1, VBus/LAN o VBus/USB).",
+          "password": "Password per accedere al dispositivo Resol KM2 or DL2/DL2Plus/DL3. Non necessario per json-live-data-server (KM1, VBus/LAN or VBus/USB).",
           "scan_interval": "Definisce la frequenza di aggiornamento. Parametro opzionale in secondi. Default '300' (5 min), valore minimo '60' (1 min).",
-          "api_key": "Applicabile solo con DL2/DL3. Applica il filtro definito su DL2/DL3. Usa l'id del filtro per DL2/DL3."
+          "api_key": "Applicabile solo per DL2/DL3. Usa l'id del filtro già definito su DL2/DL3"
         }
       }
     }
