@@ -106,6 +106,7 @@ class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
     _title: str
     _product: str
     _input_data: dict[str, Any]
+    _reconfigure_entry = None
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
@@ -124,8 +125,9 @@ class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors["base"] = "unknown"
 
             if "base" not in errors:
-                await self.async_set_unique_id(info.get("title"))
-                self._abort_if_unique_id_configured()
+                if not self._reconfigure_entry:
+                    await self.async_set_unique_id(info.get("title"))
+                    self._abort_if_unique_id_configured()
 
                 self._title = info["title"]
                 self._product = info["product"]
@@ -137,9 +139,22 @@ class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
 
                 return await self.async_step_options()
 
-        return self.async_show_form(
-            step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
-        )
+        schema = STEP_USER_DATA_SCHEMA
+        if self._reconfigure_entry:
+            STEP_USER_DATA_SCHEMA_RECON = vol.Schema(
+                {
+                    vol.Required(
+                        CONF_HOST, default=self._reconfigure_entry.data.get(CONF_HOST)
+                    ): cv.string,
+                    vol.Required(
+                        CONF_PORT,
+                        default=self._reconfigure_entry.data.get(CONF_PORT),
+                    ): cv.port,
+                }
+            )
+            schema = STEP_USER_DATA_SCHEMA_RECON
+
+        return self.async_show_form(step_id="user", data_schema=schema, errors=errors)
 
     async def async_step_auth(
         self, user_input: dict[str, Any] | None = None
@@ -167,9 +182,25 @@ class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
                 else:
                     return await self.async_step_options()
 
+        schema = STEP_AUTH_DATA_SCHEMA
+        if self._reconfigure_entry:
+            STEP_AUTH_DATA_SCHEMA_RECON = vol.Schema(
+                {
+                    vol.Required(
+                        CONF_USERNAME,
+                        default=self._reconfigure_entry.data.get(CONF_USERNAME, ""),
+                    ): cv.string,
+                    vol.Required(
+                        CONF_PASSWORD,
+                        default=self._reconfigure_entry.data.get(CONF_PASSWORD, ""),
+                    ): cv.string,
+                }
+            )
+            schema = STEP_AUTH_DATA_SCHEMA_RECON
+
         return self.async_show_form(
             step_id="auth",
-            data_schema=STEP_AUTH_DATA_SCHEMA,
+            data_schema=schema,
             errors=errors,
         )
 
@@ -180,11 +211,33 @@ class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             self._input_data.update(user_input)
-            return self.async_create_entry(title=self._title, data=self._input_data)
+            if not self._reconfigure_entry:
+                return self.async_create_entry(title=self._title, data=self._input_data)
+            else:
+                return self.async_update_reload_and_abort(
+                    self._reconfigure_entry,
+                    unique_id=self._reconfigure_entry.unique_id,
+                    data={**self._reconfigure_entry.data, **self._input_data},
+                    reason="reconfigure_successful",
+                )
+
+        schema = STEP_OPTIONS_DATA_SCHEMA
+        if self._reconfigure_entry:
+            STEP_OPTIONS_DATA_SCHEMA_RECON = vol.Schema(
+                {
+                    vol.Optional(
+                        CONF_SCAN_INTERVAL,
+                        default=self._reconfigure_entry.data.get(
+                            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
+                }
+            )
+            schema = STEP_OPTIONS_DATA_SCHEMA_RECON
 
         return self.async_show_form(
             step_id="options",
-            data_schema=STEP_OPTIONS_DATA_SCHEMA,
+            data_schema=schema,
             last_step=True,
         )
 
@@ -195,11 +248,37 @@ class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             self._input_data.update(user_input)
-            return self.async_create_entry(title=self._title, data=self._input_data)
+            if not self._reconfigure_entry:
+                return self.async_create_entry(title=self._title, data=self._input_data)
+            else:
+                return self.async_update_reload_and_abort(
+                    self._reconfigure_entry,
+                    unique_id=self._reconfigure_entry.unique_id,
+                    data={**self._reconfigure_entry.data, **self._input_data},
+                    reason="reconfigure_successful",
+                )
+
+        schema = STEP_DL23OPTIONS_DATA_SCHEMA
+        if self._reconfigure_entry:
+            STEP_DL23OPTIONS_DATA_SCHEMA_RECON = vol.Schema(
+                {
+                    vol.Optional(
+                        CONF_SCAN_INTERVAL,
+                        default=self._reconfigure_entry.data.get(
+                            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
+                    vol.Optional(
+                        CONF_API_KEY,
+                        default=self._reconfigure_entry.data.get(CONF_API_KEY, ""),
+                    ): cv.string,
+                }
+            )
+            schema = STEP_DL23OPTIONS_DATA_SCHEMA_RECON
 
         return self.async_show_form(
             step_id="dl23options",
-            data_schema=STEP_DL23OPTIONS_DATA_SCHEMA,
+            data_schema=schema,
             last_step=True,
         )
 
@@ -208,56 +287,9 @@ class ResolConfigFlow(ConfigFlow, domain=DOMAIN):
     ) -> ConfigFlowResult:
         """Add reconfigure step to allow to reconfigure a config entry."""
 
-        errors: dict[str, str] = {}
-        config = self._get_reconfigure_entry()
+        self._reconfigure_entry = self._get_reconfigure_entry()
 
-        if user_input is not None:
-            try:
-                info = await validate_input(self.hass, user_input)
-                await validate_auth(self.hass, user_input)
-            except CannotConnect:
-                errors["base"] = "cannot_connect"
-            except InvalidAuth:
-                errors["base"] = "invalid_auth"
-            except Exception:  # pylint: disable=broad-except
-                _LOGGER.exception("Unexpected exception")
-                errors["base"] = "unknown"
-            else:
-                return self.async_update_reload_and_abort(
-                    config,
-                    unique_id=config.unique_id,
-                    data={**config.data, **user_input},
-                    reason="reconfigure_successful",
-                )
-        return self.async_show_form(
-            step_id="reconfigure",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(
-                        CONF_HOST, default=config.data.get(CONF_HOST)
-                    ): cv.string,
-                    vol.Required(
-                        CONF_PORT, default=config.data.get(CONF_PORT)
-                    ): cv.port,
-                    vol.Optional(
-                        CONF_USERNAME, default=config.data.get(CONF_USERNAME, "")
-                    ): cv.string,
-                    vol.Optional(
-                        CONF_PASSWORD, default=config.data.get(CONF_PASSWORD, "")
-                    ): cv.string,
-                    vol.Optional(
-                        CONF_SCAN_INTERVAL,
-                        default=config.data.get(
-                            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
-                        ),
-                    ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
-                    vol.Optional(
-                        CONF_API_KEY, default=config.data.get(CONF_API_KEY, "")
-                    ): cv.string,
-                }
-            ),
-            errors=errors,
-        )
+        return await self.async_step_user()
 
     async def async_step_import(self, import_data):
         """Import config from configuration.yaml.

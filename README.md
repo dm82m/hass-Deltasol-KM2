@@ -30,7 +30,6 @@ Component uses webservice to get all the sensor data and makes it available in [
 
 ### Next To Come Features (Wishlist)
 
-- :arrows_counterclockwise: Reuse config_flow process for reconfigure flow. Very low prio as it is not a highly needed usecase.
 - ... more ideas? Feel free to open an [Feature Request](https://github.com/dm82m/hass-Deltasol-KM2/issues/new?template=feature_request.yml).
 
 ### Bugs
