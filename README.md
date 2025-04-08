@@ -81,7 +81,7 @@ Restart Home Assistant Core and afterwards [![configure_resol](https://img.shiel
 
 ## Configuration
 
-In any case, try to ensure to have the latest firmware running on your Resol device.
+In any case, try to ensure to have the latest firmware running on your Resol device. Also ensure to have the latest `VBus Specification File (VSF)` installed on your Resol device.
 
 ### KM2 and DL2/DL2Plus/DL3
 
