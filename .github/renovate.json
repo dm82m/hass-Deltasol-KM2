@@ -1,0 +1,29 @@
+{
+    "rebaseWhen": "behind-base-branch",
+    "dependencyDashboard": true,
+    "labels": [
+        "dependencies"
+    ],
+    "commitMessagePrefix": "⬆️",
+    "packageRules": [
+        {
+            "matchManagers": [
+                "github-actions"
+            ],
+            "addLabels": [
+                "github_actions"
+            ],
+            "rangeStrategy": "pin"
+        },
+        {
+            "matchManagers": [
+                "github-actions"
+            ],
+            "matchUpdateTypes": [
+                "minor",
+                "patch"
+            ],
+            "automerge": true
+        }
+    ]
+}
