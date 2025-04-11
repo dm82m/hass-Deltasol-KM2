@@ -1,0 +1,18 @@
+{
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "[json]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "isort.args": ["--profile", "black"],
+    "python.linting.mypyEnabled": true,
+    "autoDocstring.docstringFormat": "numpy",
+    "terminal.integrated.enableMultiLinePasteWarning": false,
+    "window.zoomLevel": 3
+}
