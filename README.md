@@ -120,6 +120,10 @@ logger:
     custom_components.deltasol: debug
 ```
 
+## Development
+
+If you want to support the development, you can find AI generated development [documentation](https://deepwiki.com/dm82m/hass-Deltasol-KM2) that will help you start contributing to this project.
+
 ## Credits
 
 A huge thank you to all the contributors and also thank you to everyone who contributed ideas.
