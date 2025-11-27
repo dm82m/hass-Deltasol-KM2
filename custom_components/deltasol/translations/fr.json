@@ -1,0 +1,57 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Le périphérique est dejà configuré",
+            "reconfigure_successful": "Reconfiguration réussie"
+        },
+        "error": {
+            "cannot_connect": "Erreur de connection",
+            "invalid_auth": "Erreur d'authentication",
+            "unknown": "Erreur inatendue"
+        },
+        "step": {
+            "user": {
+                "description": "Veuillez indiquer l'adresse de votre appareil Resol:",
+                "data": {
+                    "host": "Host",
+                    "port": "Port"
+                },
+                "data_description": {
+                    "host": "Hostname or IP address of your Resol KM2 or DL2/DL2Plus/DL3 device or your json-live-data-server (KM1, VBus/LAN or VBus/USB). If json-live-data-server runs as Add-on use '127.0.0.1'.",
+                    "port": "Port of your Resol KM2 or DL2/DL2Plus/DL3. Defaults to '80'. If you use json-live-data-server (KM1, VBus/LAN or VBus/USB), the default port is '3333'."
+                }
+            },
+            "auth": {
+                "description": "Votre appareil Resol nécessite des informations d'identification pour l'authentification:",
+                "data": {
+                    "username": "Username",
+                    "password": "Password"
+                },
+                "data_description": {
+                    "username": "Nom d'utilisateur utilisé pour vous connecter à votre appareil. Le nom d'utilisateur par défaut est 'admin'.",
+                    "password": "Mot de passe utilisé pour vous connecter à votre appareil."
+                }
+            },
+            "options": {
+                "description": "Configuration de votre appareil Resol:",
+                "data": {
+                    "scan_interval": "Intervalle de balayage (secondes)"
+                },
+                "data_description": {
+                    "scan_interval": "Définit la fréquence de mise à jour. Facultatif et en secondes. La valeur par défaut est « 300 » (5 min), la valeur minimale est « 60 » (1 min).."
+                }
+            },
+            "dl23options": {
+                "description": "Configuration de votre appareil Resol DL2/DL3:",
+                "data": {
+                    "scan_interval": "Intervalle de balayage (secondes)",
+                    "api_key": "API key"
+                },
+                "data_description": {
+                    "scan_interval": "Définit la fréquence de mise à jour. Facultatif et en secondes. La valeur par défaut est « 300 » (5 min), la valeur minimale est « 60 » (1 min).",
+                    "api_key": "Applique le filtre défini sur DL2/DL3. Utilisez ici l'ID du filtre défini sur Resol DL2/DL3."
+                }
+            }
+        }
+    }
+}
