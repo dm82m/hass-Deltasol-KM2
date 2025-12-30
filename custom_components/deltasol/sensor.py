@@ -12,7 +12,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import SOURCE_IMPORT
-from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfTemperature
+from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfTemperature, UnitOfPower
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC, DeviceInfo
 from homeassistant.helpers.entity import EntityCategory
@@ -83,6 +83,7 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
             "%RH": "mdi:water-percent",
             "s": "mdi:timer",
             "Wh": "mdi:solar-power-variant-outline",
+            "W": "mdi:flash",
         },
     )
 
@@ -154,6 +155,8 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
             return SensorDeviceClass.POWER_FACTOR
         if self._unit == UnitOfEnergy.WATT_HOUR:
             return SensorDeviceClass.ENERGY
+        if self._unit == UnitOfPower.WATT:
+            return SensorDeviceClass.POWER
         if isinstance(self.coordinator.data[self.unique_id].value, date):
             return SensorDeviceClass.DATE
         return None
@@ -162,6 +165,8 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
     def state_class(self) -> SensorStateClass | str | None:
         """Return the state class of this entity, if any."""
         if self._unit == UnitOfTemperature.CELSIUS:
+            return SensorStateClass.MEASUREMENT
+        if self._unit == UnitOfPower.WATT:
             return SensorStateClass.MEASUREMENT
         if self._unit == UnitOfEnergy.WATT_HOUR:
             return SensorStateClass.TOTAL_INCREASING
