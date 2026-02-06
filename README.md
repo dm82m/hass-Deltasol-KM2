@@ -22,7 +22,7 @@ Component uses webservice to get all the sensor data and makes it available in [
 - :computer: This integration supports all Resol devices: KM1/KM2, DL2/DL2Plus/DL3, VBus/LAN and VBus/USB. Welcome the *DL2Plus* as the newest family member.
 - :tv: This integration is fully configurable within the UI, no `yaml` configuration needed. *It now even guides you through the whole setup process and only asks you for the options that are really needed for your specific device. And we even have the possibility to re-configure your device and change all options you made before.*
 - :star: The exclusive filter that is only available on DL2/DL3 devices can be used with this integration!
-- :link: If the connection to your Resol device gets lost (network issue, Add-on not yet started, ...) the integration makes retries until the connection is established.
+- :link: If the connection to your Resol device gets lost (network issue, App not yet started, ...) the integration makes retries until the connection is established.
 - :large_blue_diamond: All the data of your Resol device is shown in Home Assistant. I.e. Product Name, Serial Number, Product Features, Software Version, Hardware Version, MAC Address, ...
 - :small_blue_diamond: All bus devices that are connected to your Resol device are shown as device in Home Assistant with the specific bus device name. Additionally all the sensors are grouped by these bus devices to make it easier to find your desired sensors.
 - :small_orange_diamond: By default all sensors without a unit are handled as diagnostic sensors and disabled by default. You can manually enable them if needed.
@@ -100,7 +100,7 @@ It works out-of-the-box, the only thing that is needed is the configuration desc
 ### KM1, VBus/LAN and VBus/USB
 
 There is one prerequisite before it works. You need to run the resol-vbus [json-live-data-server](https://github.com/danielwippermann/resol-vbus/tree/master/examples/json-live-data-server). To do so you have at least two possibilities:
-1. Run the server as an HAOS add-on, continue [here](https://github.com/dm82m/hassio-addons/tree/main/resol-vbus).
+1. Run the server as an HAOS App, continue [here](https://github.com/dm82m/hassio-addons/tree/main/resol-vbus).
 2. Run the server on your own, continue [here](https://github.com/danielwippermann/resol-vbus/tree/master/examples/json-live-data-server) and ensure to be at least on git commit `7c9e88af5af3e14443c01a4ec5d7c042be2163f9`.
 
 If your json-live-data-server is successfully running, lets continue here.
