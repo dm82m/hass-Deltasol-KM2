@@ -22,14 +22,14 @@ jobs:
         run: |
           if [ "${{ steps.read_manifest.outputs.manifest_version }}" != "${{ github.event.release.tag_name }}" ]; then
             echo "::error::Version mismatch! manifest.json (${{ steps.read_manifest.outputs.manifest_version }}) ≠ Release (${{ github.event.release.tag_name }})"
-            
+
             RELEASE_NOTES=$(gh release view ${{ github.event.release.tag_name }} --json body -q '.body')
             echo "Release Notes:"
             echo "$RELEASE_NOTES"
 
             gh release delete "${{ github.event.release.tag_name }}" --yes || true
             git push --delete origin "${{ github.event.release.tag_name }}" || true
-            
+
             exit 1
           fi
         env:

@@ -21,7 +21,6 @@ from homeassistant.exceptions import HomeAssistantError, IntegrationError
 from homeassistant.helpers import config_validation as cv
 
 from .const import (
-    DEFAULT_NAME,
     DEFAULT_PORT,
     DEFAULT_SCAN_INTERVAL,
     DEFAULT_USERNAME,
@@ -76,7 +75,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
         raise CannotConnect from err
 
     return {
-        "title": f"{api.product_details["name"]}@{data.get(CONF_HOST)}:{data.get(CONF_PORT)}",
+        "title": f"{api.product_details['name']}@{data.get(CONF_HOST)}:{data.get(CONF_PORT)}",
         "product": {api.product},
     }
 
