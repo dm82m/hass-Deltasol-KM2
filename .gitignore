@@ -1,2 +1,4 @@
 .DS_Store
 .vscode
+.ruff_cache
+.venv
