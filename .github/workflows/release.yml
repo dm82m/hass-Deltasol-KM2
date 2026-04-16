@@ -49,7 +49,7 @@ jobs:
           zip deltasol.zip -r ./
 
       - name: Upload archive to released version
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@2.11.5
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ github.workspace }}/custom_components/deltasol/deltasol.zip
