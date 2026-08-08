@@ -12,9 +12,9 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import SOURCE_IMPORT
-from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfTemperature, UnitOfPower
+from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfPower, UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC, DeviceInfo
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -181,7 +181,6 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
             identifiers={
                 (DOMAIN, product_details["serial"] + "_" + self._endpoint.bus_src)
             },
-            connections={(CONNECTION_NETWORK_MAC, product_details["mac"])},
             name=self._endpoint.bus_src,
             manufacturer=product_details["vendor"],
             model=product_details["name"],
