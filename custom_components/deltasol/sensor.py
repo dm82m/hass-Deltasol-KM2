@@ -4,7 +4,7 @@ import logging
 from collections import defaultdict
 from collections.abc import Mapping
 from datetime import date
-from typing import Any
+from typing import Any, ClassVar
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -73,7 +73,7 @@ async def async_setup_entry(
 class DeltasolSensor(CoordinatorEntity, SensorEntity):
     """Representation of a Resol sensor."""
 
-    icon_mapper = defaultdict(
+    icon_mapper: ClassVar[defaultdict[str, str]] = defaultdict(
         lambda: "mdi:alert-circle",
         {
             "°C": "mdi:thermometer",

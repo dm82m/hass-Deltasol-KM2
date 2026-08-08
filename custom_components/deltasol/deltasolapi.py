@@ -38,18 +38,18 @@ class DeltasolApi:
     def __parse_data(self, response) -> dict[str, DeltasolEndpoint]:
         data = {}
 
-        iHeader = 0
-        for header in response["headers"]:
+        for iHeader, header in enumerate(response["headers"]):
             _LOGGER.debug(f"Found header[{iHeader}] now parsing it ...")
-            iField = 0
-            for field in response["headers"][iHeader]["fields"]:
+            for iField, field in enumerate(response["headers"][iHeader]["fields"]):
                 value = response["headersets"][0]["packets"][iHeader]["field_values"][
                     iField
                 ]["raw_value"]
                 if isinstance(value, float):
                     value = round(value, 2)
                 if "date" in field["name"]:
-                    epochStart = datetime.datetime(2001, 1, 1, 0, 0, 0, 0)
+                    epochStart = datetime.datetime(
+                        2001, 1, 1, 0, 0, 0, 0, tzinfo=datetime.timezone.utc
+                    )
                     value = epochStart + datetime.timedelta(0, value)
                 unique_id = header["id"] + "__" + field["id"]
                 data[unique_id] = DeltasolEndpoint(
@@ -61,8 +61,6 @@ class DeltasolApi:
                     bus_src=header["source_name"],
                     product_details=self.product_details,
                 )
-                iField += 1
-            iHeader += 1
 
         return data
 
@@ -121,23 +119,19 @@ class DeltasolApi:
     def fetch_data(self) -> dict[str, DeltasolEndpoint] | None:
         """Use api to get data"""
 
-        try:
-            product = self.detect_product()
+        product = self.detect_product()
 
-            response = {}
-            if product == "km2" or product == "dl2plus":
-                response = self.fetch_data_km2()
-            elif product == "dl2" or product == "dl3":
-                response = self.fetch_data_dlx()
-            else:
-                error = f"We detected your Resol product as {product} and this product is currently not supported. If you want you can file an issue to support this device here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
-                _LOGGER.error(error)
-                raise IntegrationError(error)
+        response = {}
+        if product == "km2" or product == "dl2plus":
+            response = self.fetch_data_km2()
+        elif product == "dl2" or product == "dl3":
+            response = self.fetch_data_dlx()
+        else:
+            error = f"We detected your Resol product as {product} and this product is currently not supported. If you want you can file an issue to support this device here: https://github.com/dm82m/hass-Deltasol-KM2/issues/new/choose"
+            _LOGGER.error(error)
+            raise IntegrationError(error)
 
-            return self.__parse_data(response)
-
-        except IntegrationError as error:
-            raise error
+        return self.__parse_data(response)
 
     def fetch_data_km2(self):
         _LOGGER.debug("Retrieving data from km2")
