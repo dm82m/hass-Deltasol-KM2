@@ -48,7 +48,7 @@ class DeltasolApi:
                     value = round(value, 2)
                 if "date" in field["name"]:
                     epochStart = datetime.datetime(
-                        2001, 1, 1, 0, 0, 0, 0, tzinfo=datetime.timezone.utc
+                        2001, 1, 1, 0, 0, 0, 0, tzinfo=datetime.timezone.UTC
                     )
                     value = epochStart + datetime.timedelta(0, value)
                 unique_id = header["id"] + "__" + field["id"]
