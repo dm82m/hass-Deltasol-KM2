@@ -117,29 +117,28 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def available(self):
-        """Return if entity is available."""
-        return self.coordinator.last_update_success
+        """Return whether the last successful poll contains this sensor."""
+        return (
+            self.coordinator.last_update_success
+            and self.coordinator.data is not None
+            and self.unique_id in self.coordinator.data
+        )
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._last_updated = dt_util.now()
+        if self.available:
+            self._last_updated = dt_util.now()
         _LOGGER.debug("Updating %s", self.name)
         self.async_write_ha_state()
 
     @property
     def native_value(self):
-        """Return the value reported by the sensor."""
-        try:
-            state = self.coordinator.data[self.unique_id].value
-            if state:
-                return state
-        except KeyError:
-            _LOGGER.error("Can't find %s", self.name)
-            _LOGGER.debug("Sensor data %s", self.coordinator.data)
+        """Return the latest value, or None when the source field is missing."""
+        if not self.available:
             return None
-        else:
-            return 0
+
+        return self.coordinator.data[self.unique_id].value
 
     @property
     def native_unit_of_measurement(self) -> str | None:
@@ -157,7 +156,8 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
             return SensorDeviceClass.ENERGY
         if self._unit == UnitOfPower.WATT:
             return SensorDeviceClass.POWER
-        if isinstance(self.coordinator.data[self.unique_id].value, date):
+        # Device metadata must remain stable even when a VBus field disappears.
+        if isinstance(self._endpoint.value, date):
             return SensorDeviceClass.DATE
         return None
 
