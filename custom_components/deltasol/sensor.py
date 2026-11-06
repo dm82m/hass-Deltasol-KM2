@@ -138,7 +138,8 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
         if not self.available:
             return None
 
-        return self.coordinator.data[self.unique_id].value
+        value = self.coordinator.data[self.unique_id].value
+        return None if value == "" else value
 
     @property
     def native_unit_of_measurement(self) -> str | None:
@@ -156,8 +157,12 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
             return SensorDeviceClass.ENERGY
         if self._unit == UnitOfPower.WATT:
             return SensorDeviceClass.POWER
-        # Device metadata must remain stable even when a VBus field disappears.
-        if isinstance(self._endpoint.value, date):
+        # Use the current value when the field is present. Fall back to the creation-time value when it disappears.
+        current = (
+            self.coordinator.data.get(self.unique_id) if self.coordinator.data else None
+        )
+        value = current.value if current is not None else self._endpoint.value
+        if isinstance(value, date):
             return SensorDeviceClass.DATE
         return None
 

@@ -76,7 +76,9 @@ class DeltasolSensorRegressionTests(unittest.TestCase):
     def setUpClass(cls):
         cls.sensor_type = load_sensor_properties()
 
-    def make_sensor(self, data, *, success=True, initial_value=14, unit=""):
+    def make_sensor(
+        self, data, *, success=True, initial_value: int | date = 14, unit=""
+    ):
         sensor = self.sensor_type()
         sensor.unique_id = "vbus-field-1"
         sensor.name = "test_sensor"
@@ -97,8 +99,8 @@ class DeltasolSensorRegressionTests(unittest.TestCase):
         self.assertIsNone(sensor.native_value)
         self.assertIsNone(sensor.device_class)
 
-    def test_zero_false_and_empty_string_are_not_synthesized(self):
-        for value in (0, False, ""):
+    def test_zero_and_false_values_are_preserved(self):
+        for value in (0, False):
             with self.subTest(value=value):
                 sensor = self.make_sensor(
                     {"vbus-field-1": SimpleNamespace(value=value)}
@@ -106,6 +108,17 @@ class DeltasolSensorRegressionTests(unittest.TestCase):
                 self.assertTrue(sensor.available)
                 self.assertEqual(sensor.native_value, value)
                 self.assertEqual(type(sensor.native_value), type(value))
+
+    def test_empty_string_returns_none(self):
+        sensor = self.make_sensor({"vbus-field-1": SimpleNamespace(value="")})
+        self.assertTrue(sensor.available)
+        self.assertIsNone(sensor.native_value)
+
+    def test_datetime_class_is_stable_while_field_missing(self):
+        timestamp = datetime(2026, 1, 1, tzinfo=UTC)
+        sensor = self.make_sensor({}, initial_value=timestamp)
+        self.assertFalse(sensor.available)
+        self.assertEqual(sensor.device_class, SensorDeviceClass.DATE)
 
     def test_missing_update_preserves_last_seen_and_recovers(self):
         sensor = self.make_sensor({})
