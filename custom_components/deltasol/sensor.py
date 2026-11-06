@@ -138,7 +138,8 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
         if not self.available:
             return None
 
-        return self.coordinator.data[self.unique_id].value
+        value = self.coordinator.data[self.unique_id].value
+        return None if value == "" else value
 
     @property
     def native_unit_of_measurement(self) -> str | None:
