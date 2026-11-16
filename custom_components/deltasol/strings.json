@@ -32,22 +32,24 @@
           "password": "Password used for logging in to your device."
         }
       },
-      "dl23options": {
-        "description": "Special configuration for your Resol DL2/DL3 device:",
-        "data": {
-          "api_key": "API key"
-        },
-        "data_description": {
-          "api_key": "Applies the filter defined on the DL2/DL3. Use the ID of the filter defined on the Resol DL2/DL3 here."
-        }
-      },
       "options": {
         "description": "Configuration of your Resol device:",
         "data": {
           "scan_interval": "Scan interval (seconds)"
         },
         "data_description": {
-          "scan_interval": "Defines update frequency. Optional and in seconds. Defaults to '300' (5 min), minimum value is '60' (1 min)."
+          "scan_interval": "Defines update frequency. Optional and in seconds. Defaults to '300' (5 min), minimum value is '5' (5 sec)."
+        }
+      },
+      "dl23options": {
+        "description": "Configuration of your Resol DL2/DL3 device:",
+        "data": {
+          "scan_interval": "Scan interval (seconds)",
+          "api_key": "API key"
+        },
+        "data_description": {
+          "scan_interval": "Defines update frequency. Optional and in seconds. Defaults to '300' (5 min), minimum value is '5' (5 sec).",
+          "api_key": "Applies the filter defined on the DL2/DL3. Use the ID of the filter defined on the Resol DL2/DL3 here."
         }
       }
     }

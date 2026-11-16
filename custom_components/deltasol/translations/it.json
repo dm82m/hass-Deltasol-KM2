@@ -38,7 +38,7 @@
           "scan_interval": "Intervallo scansione (secondi)"
         },
         "data_description": {
-          "scan_interval": "Definisce la frequenza di aggiornamento. Parametro opzionale in secondi. Default '300' (5 min), valore minimo '60' (1 min)."
+          "scan_interval": "Definisce la frequenza di aggiornamento. Parametro opzionale in secondi. Default '300' (5 min), valore minimo '5' (5 sec)."
         }
       },
       "dl23options": {
@@ -48,7 +48,7 @@
           "api_key": "API key"
         },
         "data_description": {
-          "scan_interval": "Definisce la frequenza di aggiornamento. Parametro opzionale in secondi. Default '300' (5 min), valore minimo '60' (1 min).",
+          "scan_interval": "Definisce la frequenza di aggiornamento. Parametro opzionale in secondi. Default '300' (5 min), valore minimo '5' (5 sec).",
           "api_key": "Applica il filtro configurato su DL2/DL3 usando l'id del filtro già definito sul dispositivo."
         }
       }

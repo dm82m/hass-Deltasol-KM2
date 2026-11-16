@@ -38,7 +38,7 @@
                     "scan_interval": "Intervalle de balayage (secondes)"
                 },
                 "data_description": {
-                    "scan_interval": "Définit la fréquence de mise à jour. Facultatif et en secondes. La valeur par défaut est « 300 » (5 min), la valeur minimale est « 60 » (1 min).."
+                    "scan_interval": "Définit la fréquence de mise à jour. Facultatif et en secondes. La valeur par défaut est « 300 » (5 min), la valeur minimale est « 5 » (5 s)."
                 }
             },
             "dl23options": {
@@ -48,7 +48,7 @@
                     "api_key": "API key"
                 },
                 "data_description": {
-                    "scan_interval": "Définit la fréquence de mise à jour. Facultatif et en secondes. La valeur par défaut est « 300 » (5 min), la valeur minimale est « 60 » (1 min).",
+                    "scan_interval": "Définit la fréquence de mise à jour. Facultatif et en secondes. La valeur par défaut est « 300 » (5 min), la valeur minimale est « 5 » (5 s).",
                     "api_key": "Applique le filtre défini sur DL2/DL3. Utilisez ici l'ID du filtre défini sur Resol DL2/DL3."
                 }
             }

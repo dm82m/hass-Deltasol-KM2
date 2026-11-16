@@ -38,7 +38,7 @@
           "scan_interval": "Scan interval (seconds)"
         },
         "data_description": {
-          "scan_interval": "Defines update frequency. Optional and in seconds. Defaults to '300' (5 min), minimum value is '60' (1 min)."
+          "scan_interval": "Defines update frequency. Optional and in seconds. Defaults to '300' (5 min), minimum value is '5' (5 sec)."
         }
       },
       "dl23options": {
@@ -48,7 +48,7 @@
           "api_key": "API key"
         },
         "data_description": {
-          "scan_interval": "Defines update frequency. Optional and in seconds. Defaults to '300' (5 min), minimum value is '60' (1 min).",
+          "scan_interval": "Defines update frequency. Optional and in seconds. Defaults to '300' (5 min), minimum value is '5' (5 sec).",
           "api_key": "Applies the filter defined on the DL2/DL3. Use the ID of the filter defined on the Resol DL2/DL3 here."
         }
       }

@@ -94,7 +94,7 @@ It works out-of-the-box, the only thing that is needed is the configuration desc
 - `Port`: Port of your Resol KM2 or DL2/DL2Plus/DL3. Defaults to 80. Do not change that, unless you know what you do.
 - `Username`: Username used for logging in to Resol KM2 or DL2/DL2Plus/DL3.
 - `Password`: Password used for logging in to Resol KM2 or DL2/DL2Plus/DL3.
-- `Scan interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 60 (1 min).
+- `Scan interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 5 (5 sec).
 - `API key` (Optional):  Only applicable if you are using DL2/DL3 device. Applies the filter defined on the DL2/DL3. Use the id of the DL2/DL3 defined filter here.
 
 ### KM1, VBus/LAN and VBus/USB
@@ -109,7 +109,7 @@ If your json-live-data-server is successfully running, lets continue here.
 
 - `Host`: If you went with point 1 it is `127.0.0.1` and if you went with point 2 it is `hostname_or_ip_of_your_json-live-data-server`.
 - `Port`: Within default `json-live-data-server` it is port `3333`. If you have changed that, you need to use this port here aswell. Otherweise set it to `3333`.
-- `Scan interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 60 (1 min).
+- `Scan interval` (Optional): Defines update frequency. Optional and in seconds. Defaults to 300 (5 min), minimum value is 5 (5 sec).
 - Do not set `Username`, `Password` or `API key` here, they are not needed.
 
 ## Troubleshooting
