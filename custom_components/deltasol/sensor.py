@@ -146,9 +146,6 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
             return value / 60
         else:
             return value
-        
-        value == ""
-        return None if value == "" else value
 
     @property
     def native_unit_of_measurement(self) -> str | None:
