@@ -12,7 +12,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import SOURCE_IMPORT
-from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfPower, UnitOfTemperature
+from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfPower, UnitOfTemperature, UnitOfVolumeFlowRate
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityCategory
@@ -139,12 +139,24 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
             return None
 
         value = self.coordinator.data[self.unique_id].value
+        if value == "":
+            return None
+        
+        if self._endpoint.unit == UnitOfVolumeFlowRate.LITERS_PER_HOUR.lower():
+            return value / 60
+        else:
+            return value
+        
+        value == ""
         return None if value == "" else value
 
     @property
     def native_unit_of_measurement(self) -> str | None:
         """Return the unit of measurement of this entity, if any."""
-        return self._endpoint.unit
+        if self._endpoint.unit == UnitOfVolumeFlowRate.LITERS_PER_HOUR.lower():
+            return UnitOfVolumeFlowRate.LITERS_PER_MINUTE
+        else:
+            return self._endpoint.unit
 
     @property
     def device_class(self) -> SensorDeviceClass | None:
@@ -157,6 +169,8 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
             return SensorDeviceClass.ENERGY
         if self._unit == UnitOfPower.WATT:
             return SensorDeviceClass.POWER
+        if self._unit == UnitOfVolumeFlowRate.LITERS_PER_HOUR.lower():
+            return SensorDeviceClass.VOLUME_FLOW_RATE
         # Use the current value when the field is present. Fall back to the creation-time value when it disappears.
         current = (
             self.coordinator.data.get(self.unique_id) if self.coordinator.data else None
@@ -169,9 +183,7 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
     @property
     def state_class(self) -> SensorStateClass | str | None:
         """Return the state class of this entity, if any."""
-        if self._unit == UnitOfTemperature.CELSIUS:
-            return SensorStateClass.MEASUREMENT
-        if self._unit == UnitOfPower.WATT:
+        if self._unit in (UnitOfTemperature.CELSIUS, UnitOfPower.WATT, UnitOfVolumeFlowRate.LITERS_PER_HOUR.lower()):
             return SensorStateClass.MEASUREMENT
         if self._unit == UnitOfEnergy.WATT_HOUR:
             return SensorStateClass.TOTAL_INCREASING
