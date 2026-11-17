@@ -143,7 +143,7 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
             return None
         
         if self._endpoint.unit == UnitOfVolumeFlowRate.LITERS_PER_HOUR.lower():
-            return value / 60
+            return round(value / 60, 2)
         else:
             return value
 
