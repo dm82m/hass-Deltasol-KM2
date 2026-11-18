@@ -2,3 +2,4 @@
 .vscode
 .ruff_cache
 .venv
+*.pyc
