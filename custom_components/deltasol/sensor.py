@@ -145,6 +145,10 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
             return None
 
         value = self.coordinator.data[self.unique_id].value
+        # ggf. hier noch die anderen sprachen?
+        if self._attr_name in ("system_time", "heure"):
+            hours, minutes = divmod(value, 60)
+            value = f"{hours:02d}:{minutes:02d}"
         return None if value == "" else value
 
     @property
@@ -153,7 +157,7 @@ class DeltasolSensor(CoordinatorEntity, SensorEntity):
         if self._endpoint.unit == UnitOfVolumeFlowRate.LITERS_PER_HOUR.lower():
             return UnitOfVolumeFlowRate.LITERS_PER_HOUR
         else:
-            return self._endpoint.unit
+            return None if self._endpoint.unit == "" else self._endpoint.unit
 
     @property
     def device_class(self) -> SensorDeviceClass | None:

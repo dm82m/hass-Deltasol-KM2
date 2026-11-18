@@ -78,11 +78,18 @@ class DeltasolSensorRegressionTests(unittest.TestCase):
         cls.sensor_type = load_sensor_properties()
 
     def make_sensor(
-        self, data, *, success=True, initial_value: int | date = 14, unit=""
+        self,
+        data,
+        *,
+        success=True,
+        initial_value: int | date = 14,
+        unit="",
+        attr_name="test_sensor",
     ):
         sensor = self.sensor_type()
         sensor.unique_id = "vbus-field-1"
         sensor.name = "test_sensor"
+        sensor._attr_name = attr_name
         sensor.coordinator = SimpleNamespace(
             last_update_success=success,
             data=data,
@@ -114,6 +121,20 @@ class DeltasolSensorRegressionTests(unittest.TestCase):
         sensor = self.make_sensor({"vbus-field-1": SimpleNamespace(value="")})
         self.assertTrue(sensor.available)
         self.assertIsNone(sensor.native_value)
+
+    def test_time_minutes_are_formatted_as_hh_mm(self):
+        for attr_name in ("system_time", "heure"):
+            for minutes, expected in (
+                (61, "01:01"),
+                (9, "00:09"),
+                (1440, "24:00"),
+            ):
+                with self.subTest(attr_name=attr_name, minutes=minutes):
+                    sensor = self.make_sensor(
+                        {"vbus-field-1": SimpleNamespace(value=minutes)},
+                        attr_name=attr_name,
+                    )
+                    self.assertEqual(sensor.native_value, expected)
 
     def test_datetime_class_is_stable_while_field_missing(self):
         timestamp = datetime(2026, 1, 1, tzinfo=UTC)
