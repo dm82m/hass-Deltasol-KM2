@@ -57,6 +57,7 @@ def load_sensor_properties():
         "UnitOfTemperature": SimpleNamespace(CELSIUS="°C"),
         "UnitOfEnergy": SimpleNamespace(WATT_HOUR="Wh"),
         "UnitOfPower": SimpleNamespace(WATT="W"),
+        "UnitOfVolumeFlowRate": SimpleNamespace(LITERS_PER_HOUR="L/h"),
         "PERCENTAGE": "%",
     }
     # Only our checked-in sensor.py methods are executed in this test harness.
